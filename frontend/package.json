@@ -4,15 +4,16 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite",
+    "build": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite build",
+    "preview": "cross-env NODE_OPTIONS=--max-old-space-size=4096 vite preview"
   },
   "dependencies": {
     "vue": "^3.5.25"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.2",
+    "cross-env": "^10.1.0",
     "vite": "^7.3.1"
   }
 }
