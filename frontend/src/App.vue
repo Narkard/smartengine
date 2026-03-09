@@ -50,9 +50,9 @@ const formatCurrency = (value) => {
 }
 
 const getRiskColor = (percent) => {
-  if (percent > 70) return '#f85149' // Rouge vif pour risques imminents
-  if (percent > 40) return '#d29922' // Orange/Jaune pour risque modéré
-  return '#3fb950' // Vert pour risque faible/sous contrôle
+  if (percent > 60) return '#f85149' // Rouge (Risque critique)
+  if (percent > 30) return '#d29922' // Orange (Attention)
+  return '#3fb950' // Vert (Stable)
 }
 
 onMounted(() => {
@@ -106,8 +106,9 @@ onMounted(() => {
                 <th>Nom du Compte</th>
                 <th>MRR Menacé</th>
                 <th>Tickets Support</th>
-                <th>Probabilité de Churn</th>
-                <th>Action Recommandée</th>
+                <th>Probabilité</th>
+                <th>Signaux d'alerte</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -123,6 +124,11 @@ onMounted(() => {
                     <div class="risk-bar" :style="{ width: acc.churn_risk_percent + '%', backgroundColor: getRiskColor(acc.churn_risk_percent) }"></div>
                   </div>
                   <span class="risk-pct" :style="{ color: getRiskColor(acc.churn_risk_percent) }">{{ acc.churn_risk_percent }}%</span>
+                </td>
+                <td>
+                  <div class="signals-list">
+                    <span v-for="sig in acc.signals" :key="sig" class="signal-tag">{{ sig }}</span>
+                  </div>
                 </td>
                 <td>
                   <button class="action-btn">Contacter</button>
@@ -304,6 +310,22 @@ onMounted(() => {
 .small-badge.bad {
   background: rgba(210, 153, 34, 0.15);
   color: #d29922;
+}
+
+.signals-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.signal-tag {
+  background: rgba(210, 153, 34, 0.1);
+  color: #d29922;
+  border: 1px solid rgba(210, 153, 34, 0.2);
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
 }
 
 /* Risk Bar */

@@ -57,18 +57,25 @@ def get_at_risk_accounts():
     
     df_active['churn_probability'] = churn_probabilities
     
-    # Filtre sur "À risque" (proba > 30% par exemple, vue la distribution imbalanced)
+    # Filtre sur "À risque" (seuil à 30% pour correspondre aux alertes critiques)
     at_risk = df_active[df_active['churn_probability'] > 0.3].sort_values(by='churn_probability', ascending=False)
     
-    # Formattage de la réponse
+    # Formattage de la réponse avec explicabilité simple
     results = []
     for _, row in at_risk.iterrows():
+        # Détection "naïve" des signaux basés sur les seuils
+        signals = []
+        if row.get('ticket_count', 0) > 3: signals.append("Tickets support élevés")
+        if row.get('error_count', 0) > 10: signals.append("Erreurs techniques fréquentes")
+        if row.get('usage_count', 0) < 50: signals.append("Faible utilisation plateforme")
+        
         results.append({
             "account_id": str(row['account_id']),
             "account_name": row.get('account_name', f"Compte {row['account_id'][:8]}"),
             "mrr": float(row.get('mrr_amount', 0)),
             "tickets": int(row.get('ticket_count', 0)),
-            "churn_risk_percent": round(row['churn_probability'] * 100, 1)
+            "churn_risk_percent": round(row['churn_probability'] * 100, 1),
+            "signals": signals if signals else ["Signal faible global"]
         })
         
     return {"at_risk_accounts": results, "total_scanned": len(df_active)}
