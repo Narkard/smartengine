@@ -7,8 +7,7 @@ pour RavenStack, un SaaS B2B. Les donnees sont dans /data/raw/.
 
 ## Conventions
 
-- Backend Python -> /backend/
-- Frontend Vue.js -> /frontend/
+- Scripts Python -> /src/
 - Rapports -> /outputs/
 - Ne jamais modifier /data/raw/
 - Tous les rapports sont en francais
