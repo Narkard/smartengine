@@ -3,70 +3,65 @@ import numpy as np
 import os
 import joblib
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
+from sklearn.ensemble import GradientBoostingClassifier
 
 DATA_PATH = "../outputs/master_dataset.csv"
 MODEL_PATH = "churn_model.pkl"
 
-def train_model():
-    print("--- ENTRAINEMENT DU MODELE DE CHURN ---")
+def train_gbm_model():
+    print("--- SPRINT 3 : ENTRAINEMENT GRADIENT BOOSTING ---")
     if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError("master_dataset.csv introuvable. Exécutez data_pipeline.py d'abord.")
+        raise FileNotFoundError("master_dataset.csv introuvable.")
     
     df = pd.read_csv(DATA_PATH)
     
-    # Feature engineering basique (Nettoyage de valeurs non utiles à l'apprentissage brut)
-    # Ex: account_id n'a pas de pouvoir prédictif
-    drop_cols = ['account_id', 'account_name', 'signup_date']
-    df_clean = df.drop(columns=[col for col in drop_cols if col in df.columns], errors='ignore')
+    # Nettoyage
+    drop_cols = ['account_id', 'account_name', 'signup_date', 'subscription_id', 'country', 'referral_source']
+    X = df.drop(columns=[col for col in drop_cols if col in df.columns], errors='ignore')
     
-    # Séparation Target et Features
-    if 'target_churn' not in df_clean.columns:
-        # Fallback pour sécuriser la présence du label
-        raise ValueError("Colonne cible 'target_churn' absente.")
+    y = X['target_churn'].astype(int)
+    X = X.drop('target_churn', axis=1)
     
-    X = df_clean.drop('target_churn', axis=1)
-    y = df_clean['target_churn'].astype(int)  # 0 or 1
-    
-    # Identification des types de colonnes
+    # Preprocessing
     categorical_features = X.select_dtypes(include=['object', 'bool']).columns.tolist()
     numeric_features = X.select_dtypes(exclude=['object', 'bool']).columns.tolist()
     
-    # Préparation du Pipeline (Preprocessing + Model)
-    numeric_transformer = StandardScaler()
-    categorical_transformer = OneHotEncoder(handle_unknown='ignore')
-    
     preprocessor = ColumnTransformer(
         transformers=[
-            ('num', numeric_transformer, numeric_features),
-            ('cat', categorical_transformer, categorical_features)
+            ('num', StandardScaler(), numeric_features),
+            ('cat', OneHotEncoder(handle_unknown='ignore'), categorical_features)
         ])
-        
+    
+    # Gradient Boosting (on peut ajuster sample_weight manuellement si besoin)
     model = Pipeline(steps=[
         ('preprocessor', preprocessor),
-        ('classifier', RandomForestClassifier(n_estimators=100, random_state=42, class_weight='balanced'))
+        ('classifier', GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42))
     ])
     
-    # Split
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
     
-    # Entraînement
-    model.fit(X_train, y_train)
+    # On peut donner plus de poids à la classe 1 pendant le fit
+    # Mais le GBM de sklearn n'a pas class_weight. On utilise sample_weight.
+    weights = np.where(y_train == 1, 10, 1) # Poids 10 pour le churn
     
-    # Prédictions et Evaluation
+    print("Entraînement du modèle GBM avec sample weights...")
+    model.fit(X_train, y_train, classifier__sample_weight=weights)
+    
+    # Evaluation
     y_pred = model.predict(X_test)
-    acc = accuracy_score(y_test, y_pred)
+    print(f"Accuracy : {accuracy_score(y_test, y_pred):.2%}")
+    print("\nMatrice de confusion :")
+    print(confusion_matrix(y_test, y_pred))
+    print("\nRapport de classification :")
+    print(classification_report(y_test, y_pred))
     
-    print(f"Accuracy sur Test Set : {acc:.2%}")
-    print("\nRapport de classification:\n", classification_report(y_test, y_pred))
-    
-    # Sauvegarde du modèle complet (inclus le preprocessor)
+    # Sauvegarde
     joblib.dump(model, MODEL_PATH)
-    print(f"\nModèle enregistré sous : {MODEL_PATH}")
+    print(f"\nModèle GBM enregistré : {MODEL_PATH}")
 
 if __name__ == "__main__":
-    train_model()
+    train_gbm_model()

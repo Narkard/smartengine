@@ -13,4 +13,4 @@ pour RavenStack, un SaaS B2B. Les donnees sont dans /data/raw/.
 - Tous les rapports sont en francais
 
 ## Sprint en cours
-Sprint 2 - Traitement des donnees (Nettoyage, Feature Engineering)
+Sprint 4 - Déploiement et soutenance (Dashboard Streamlit, Alertes, Recommendations)
