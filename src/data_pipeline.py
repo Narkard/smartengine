@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import os
-import json
+from datetime import timedelta
 
 # Chemins des fichiers bruts
 DATA_DIR = "../data/raw"
@@ -12,57 +12,80 @@ TICKETS_PATH = os.path.join(DATA_DIR, "ravenstack_support_tickets.csv")
 CHURN_PATH = os.path.join(DATA_DIR, "ravenstack_churn_events.csv")
 
 def explore_and_clean_data():
-    print("--- DEBUT DE L'ANALYSE ---")
+    print("--- SPRINT 2 : PIPELINE DE TRAITEMENT AVANCE ---")
     
     # 1. Chargement des données
     accounts = pd.read_csv(ACCOUNTS_PATH)
     subs = pd.read_csv(SUBS_PATH)
     usage = pd.read_csv(USAGE_PATH)
     tickets = pd.read_csv(TICKETS_PATH)
-    churn = pd.read_csv(CHURN_PATH)
     
-    # 2. Agrégation des comportements au niveau des abonnements et comptes
-    print("Agregation de l'usage...")
-    # On calcule le volume d'utilisation, la durée et les erreurs par abonnement
-    usage_agg = usage.groupby('subscription_id').agg({
+    # Conversion des dates
+    usage['usage_date'] = pd.to_datetime(usage['usage_date'])
+    tickets['submitted_at'] = pd.to_datetime(tickets['submitted_at'])
+    
+    # 2. Feature Engineering : Usage & Tendances
+    print("Calcul des tendances d'usage...")
+    max_date = usage['usage_date'].max()
+    recent_limit = max_date - timedelta(days=60)
+    
+    # Usage total par abonnement
+    usage_total = usage.groupby('subscription_id').agg({
         'usage_count': 'sum',
         'usage_duration_secs': 'sum',
         'error_count': 'sum'
-    }).reset_index()
+    }).rename(columns={'usage_count': 'total_usage', 'error_count': 'total_errors', 'usage_duration_secs': 'total_duration'})
     
-    # Jointure des abonnements et de leur usage, avec ajout de la variable cible
-    # Pour déterminer si un abo a churn, on regarde son churn_flag.
-    subs_enriched = subs.merge(usage_agg, on='subscription_id', how='left')
-    subs_enriched.fillna({'usage_count': 0, 'usage_duration_secs': 0, 'error_count': 0}, inplace=True)
+    # Usage récent (60 derniers jours)
+    usage_recent = usage[usage['usage_date'] >= recent_limit].groupby('subscription_id').agg({
+        'usage_count': 'sum'
+    }).rename(columns={'usage_count': 'recent_usage'})
     
-    print("Agregation des tickets...")
-    tickets_agg = tickets.groupby('account_id').agg({
+    usage_features = usage_total.join(usage_recent, how='left').fillna(0)
+    # Variable de tendance : ratio usage récent / usage total
+    usage_features['usage_trend'] = usage_features['recent_usage'] / (usage_features['total_usage'] + 1)
+    
+    # 3. Feature Engineering : Support & Satisfaction
+    print("Traitement des tickets et scores de satisfaction...")
+    # Imputation simple pour la satisfaction (moyenne)
+    tickets['satisfaction_score'] = tickets['satisfaction_score'].fillna(tickets['satisfaction_score'].mean())
+    
+    tickets_features = tickets.groupby('account_id').agg({
         'ticket_id': 'count',
+        'satisfaction_score': 'mean',
         'resolution_time_hours': 'mean',
         'escalation_flag': 'sum'
     }).rename(columns={'ticket_id': 'ticket_count'}).reset_index()
     
-    # 3. Construction des données comptes
-    accounts_enriched = accounts.merge(tickets_agg, on='account_id', how='left')
-    accounts_enriched.fillna({'ticket_count': 0, 'resolution_time_hours': 0, 'escalation_flag': 0}, inplace=True)
+    # 4. Jointures et Finalisation
+    print("Construction du dataset master enrichi...")
     
-    # Ajout du revenu total de l'abonnement en cours (ou dernier connu) par account
-    active_subs = subs_enriched.sort_values(by=['account_id', 'start_date']).drop_duplicates(subset=['account_id'], keep='last')
-    dataset = accounts_enriched.merge(active_subs[['account_id', 'mrr_amount', 'usage_count', 'error_count', 'churn_flag']], on='account_id', how='inner')
+    # On garde le dernier abonnement par compte
+    last_subs = subs.sort_values(by=['account_id', 'start_date']).drop_duplicates(subset=['account_id'], keep='last')
     
+    # Fusion accounts + tickets
+    dataset = accounts.merge(tickets_features, on='account_id', how='left')
+    dataset.fillna({'ticket_count': 0, 'satisfaction_score': 3.0, 'resolution_time_hours': 0, 'escalation_flag': 0}, inplace=True)
+    
+    # Fusion avec abonnements et usage
+    dataset = dataset.merge(last_subs[['account_id', 'subscription_id', 'plan_tier', 'mrr_amount', 'churn_flag']], on='account_id', how='left')
+    dataset = dataset.merge(usage_features, on='subscription_id', how='left')
+    
+    # Nettoyage final des valeurs manquantes dues aux jointures
+    dataset.fillna({
+        'total_usage': 0, 'total_errors': 0, 'total_duration': 0,
+        'recent_usage': 0, 'usage_trend': 0, 'mrr_amount': 0
+    }, inplace=True)
+    
+    # Renommage target
     dataset.rename(columns={'churn_flag_y': 'target_churn'}, inplace=True)
     
-    print(f"Dataset d'entrainement construit : {dataset.shape[0]} comptes, {dataset.shape[1]} variables.")
-    
-    # 4. Identification basique des signaux précurseurs (corrélations simples)
-    correlations = dataset[['target_churn', 'mrr_amount', 'usage_count', 'error_count', 'ticket_count', 'escalation_flag']].corr()['target_churn'].sort_values()
-    print("\nCorrélations avec le churn (Signaux précurseurs) :")
-    print(correlations)
-
-    # 5. Sauvegarde des datasets masterisés dans outputs
+    # 5. Sauvegarde
     os.makedirs("../outputs", exist_ok=True)
     dataset.to_csv("../outputs/master_dataset.csv", index=False)
-    print("\nDataset master enregistré dans /outputs/master_dataset.csv")
+    
+    print(f"Dataset master généré : {dataset.shape[0]} lignes, {dataset.shape[1]} colonnes.")
+    print("Nouvelles variables créées : [total_usage, total_errors, usage_trend, satisfaction_score, ticket_count]")
 
 if __name__ == "__main__":
     explore_and_clean_data()
