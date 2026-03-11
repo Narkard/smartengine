@@ -1,3 +1,5 @@
 data/raw/
+outputs/
+src/
 *.ipynb
 docs/exploration-*/
