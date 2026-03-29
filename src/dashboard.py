@@ -34,8 +34,9 @@ if data is not None:
     with col2:
         st.metric("MRR Total", f"{filtered_data['mrr_amount'].sum():,.0f} $")
     with col3:
-        churn_count = filtered_data['churn_flag'].sum()
-        st.metric("Clients Churnés", int(churn_count))
+        # Alerte si trend < 0.8 (baisse de 20%)
+        high_risk = len(filtered_data[(filtered_data['usage_trend'] < 0.8) & (filtered_data['churn_flag'] == 0)])
+        st.metric("Comptes à Risque", high_risk)
     with col4:
         churn_rate = (filtered_data['churn_flag'].sum() / len(filtered_data)) * 100
         st.metric("Taux de Churn", f"{churn_rate:.1f}%")
@@ -45,28 +46,30 @@ if data is not None:
     g1, g2 = st.columns(2)
 
     with g1:
-        st.subheader("Usage vs MRR (par Industrie)")
-        fig_scatter = px.scatter(filtered_data, x="usage_count_sum", y="mrr_amount", color="industry", 
-                                 size="seats", hover_name="account_id", title="Corrélation Usage/Revenu")
-        st.plotly_chart(fig_scatter, use_container_width=True)
+        st.subheader("Distribution de la Tendance d'Usage")
+        fig_trend = px.histogram(filtered_data, x="usage_trend", color="churn_flag", 
+                                 title="Score de Tendance (1.0 = Stable)",
+                                 labels={'usage_trend': 'Usage Trend', 'churn_flag': 'Churn'})
+        fig_trend.add_vline(x=0.8, line_dash="dash", line_color="red")
+        st.plotly_chart(fig_trend, use_container_width=True)
 
     with g2:
-        st.subheader("Distribution du Taux de Churn par Industrie")
-        churn_by_ind = filtered_data.groupby('industry')['churn_flag'].mean().reset_index()
-        fig_bar = px.bar(churn_by_ind, x='industry', y='churn_flag', title="Taux de Churn (%)", color='industry')
-        st.plotly_chart(fig_bar, use_container_width=True)
+        st.subheader("MRR par Industrie")
+        fig_pie = px.pie(filtered_data, values='mrr_amount', names='industry', hole=0.4)
+        st.plotly_chart(fig_pie, use_container_width=True)
 
     # --- TABLEAU D'ALERTES ---
     st.markdown("---")
-    st.subheader("🚩 Comptes à Surveiller (Baisse de Satisfaction ou Usage Faible)")
+    st.subheader("🚩 Liste des Comptes Prioritaires (Faible Usage)")
     
-    # Heuristique simple pour l'alerte
-    mean_usage = filtered_data['usage_count_sum'].mean()
-    alerts_table = filtered_data[(filtered_data['satisfaction_score'] < 3) | (filtered_data['usage_count_sum'] < mean_usage * 0.5)]
-    alerts_table = alerts_table.sort_values(by='mrr_amount', ascending=False)
+    alerts_table = filtered_data[(filtered_data['usage_trend'] < 0.8) & (filtered_data['churn_flag'] == 0)]
+    alerts_table = alerts_table.sort_values(by='usage_trend')
 
     st.dataframe(
-        alerts_table[['account_id', 'industry', 'plan_tier', 'mrr_amount', 'usage_count_sum', 'satisfaction_score', 'churn_flag']],
+        alerts_table[['account_id', 'industry', 'plan_tier', 'mrr_amount', 'usage_trend', 'satisfaction_score']],
+        column_config={
+            "usage_trend": st.column_config.ProgressColumn("Tendance Usage", min_value=0, max_value=1.5, format="%.2f"),
+        },
         use_container_width=True,
         hide_index=True
     )
