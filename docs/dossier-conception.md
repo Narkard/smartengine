@@ -24,4 +24,25 @@ En conformité avec le RGPD et la loi Informatique et Libertés :
 - **Automatisation** : n8n pour les alertes de risque.
 
 ---
-*Ce document sera complété à chaque sprint (Sprint 2 : Traitement des données).*
+## 2. Traitement des données (Sprint 2)
+### 2.1 Nettoyage et Agrégation
+Les données brutes ont été agrégées au niveau du compte (`account_id`). 
+- **Usage** : Somme et moyenne des `usage_count`, `usage_duration_secs` et `error_count`.
+- **Support** : Nombre de tickets par compte, temps moyen de résolution et score de satisfaction moyen.
+- **Master Dataset** : Fusion de toutes les sources pour créer un dataset unique de 500 lignes (un par client).
+
+## 3. Modélisation (Sprint 3)
+### 3.1 Algorithme
+Utilisation d'un **RandomForestClassifier** pour sa robustesse et sa capacité à gérer les variables non-linéaires.
+### 3.2 Performance
+Le modèle atteint une précision de **76%**. On note une importance forte des variables d'usage (`usage_count_mean`) et de support (`resolution_time_hours`).
+
+## 4. Déploiement (Sprint 4)
+### 4.1 Dashboard
+Développement d'une interface **Streamlit** permettant :
+- Visualisation des KPIs (MRR, Taux de Churn).
+- Analyse de la corrélation Usage/Revenu.
+- Tableau d'alertes dynamique pour les équipes Customer Success.
+
+*Dernière mise à jour : 29 mars 2026*
+
