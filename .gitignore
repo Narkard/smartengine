@@ -1,12 +1,25 @@
-# Data (Ignore raw, but keep processed analytics)
+# --- PROJET smartEngine : Groupe 1 ---
+
+# 1. Données (IGNORER RAW & INTERMÉDIAIRES)
 data/raw/
 data/processed/cleaned/
 data/processed/features/
 
-# Ignore local notebooks and exploration folders
+# AUTORISER UNIQUEMENT LA TABLE ANALYTIQUE FINALE
+!data/processed/analytics.csv
+
+# 2. Outputs (AUTORISER LE RAPPORT DE NETTOYAGE)
+outputs/*
+!outputs/rapport-nettoyage.md
+
+# 3. Code (AUTORISER SRC)
+src/__pycache__/
+*.pyc
+
+# 4. Documentation locale & Notebooks
 *.ipynb
 docs/exploration-*/
-
-# Ignore other files but keep the structure
-# Note: Usually we keep scripts, so we will allow src/
-# and specific outputs
+.env
+.venv/
+.DS_Store
+Thumbs.db
