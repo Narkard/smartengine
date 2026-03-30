@@ -25,12 +25,32 @@ En conformité avec le RGPD et la loi Informatique et Libertés :
 
 ---
 ## 2. Traitement des données (Sprint 2)
+
 ### 2.1 Nettoyage et Agrégation
-Les données brutes issues de 5 fichiers CSV ont été nettoyées et agrégées au niveau du compte (`account_id`) pour créer un dataset de scoring unique.
-- **Usage (Feature Usage)** : Les données ont d'abord été agrégées par abonnement (`subscription_id`), puis rattachées aux comptes. Les métriques incluent le volume total d'usage, la durée moyenne de session et le nombre total d'erreurs techniques.
-- **Support (Support Tickets)** : Imputation des valeurs manquantes pour le `satisfaction_score` par la moyenne du dataset pour éviter de biaiser le modèle. Agrégation du nombre de tickets et du temps de résolution moyen par compte.
-- **Finances (Subscriptions)** : Extraction du MRR (Monthly Recurring Revenue) maximum et de la fréquence de facturation.
-- **Master Dataset** : Fusion finale de toutes les sources pour créer un dataset consolidé de **500 lignes** et **20 colonnes**, sauvegardé dans `/data/processed/master_dataset.csv`.
+Les données brutes ont été nettoyées (imputation par la médiane pour le support, winsorisation du MRR) et agrégées par compte.
+
+### 2.2 Feature Engineering (Variables clés)
+Nous avons créé des variables comportementales pour capturer les signaux de churn :
+- **Usage Trend (30j)** : Variation de l'usage entre le dernier mois et la moyenne historique. Un score négatif indique une baisse d'activité, signal fort de désengagement.
+- **Engagement (Recency)** : Nombre de jours depuis la dernière action. Plus ce chiffre est élevé, plus le risque de churn augmente.
+- **Ratio Critique (Support)** : Part des tickets "Urgent/High" dans le total des tickets. Un client qui n'a que des problèmes graves est plus susceptible de partir.
+- **Diversité d'usage** : Nombre de fonctionnalités différentes utilisées. Un client qui n'utilise qu'une seule feature tire moins de valeur du produit.
+
+---
+### 2.3 Tâche de recherche : Théorie du Feature Engineering
+
+**Importance vs Algorithme** : Le feature engineering est souvent plus crucial que le choix du modèle car il fournit la "matière première". Un algorithme sophistiqué sur des données pauvres (brutes) performera moins bien qu'un modèle simple sur des features riches et intelligentes qui isolent les signaux métiers.
+
+**Variables de Tendance** : Elles se calculent en comparant une fenêtre temporelle récente à une fenêtre de référence passée. Exemple : `(Moyenne_Mois_N / Moyenne_Mois_N-1) - 1`.
+
+**Encodage des variables** :
+- **One-Hot Encoding** : Création d'une colonne binaire par catégorie. À utiliser pour les variables nominales sans ordre (ex: Secteur d'activité).
+- **Label Encoding** : Conversion en entiers (1, 2, 3). À utiliser pour les variables ordinales (ex: Plan Starter < Pro < Enterprise).
+
+**Normalisation vs Standardisation** :
+- **Normalisation** : Ramène les valeurs entre [0, 1]. Utile pour les algorithmes basés sur la distance (K-Means, KNN).
+- **Standardisation** : Centre les données (moyenne 0, écart-type 1). Préférable pour les modèles linéaires et les réseaux de neurones.
+- *Note : Les arbres de décision (Random Forest) n'en ont généralement pas besoin.*
 
 ## 3. Modélisation (Sprint 3)
 ### 3.1 Algorithme
