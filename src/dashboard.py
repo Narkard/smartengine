@@ -51,12 +51,12 @@ if data is not None:
                                  title="Score de Tendance (1.0 = Stable)",
                                  labels={'usage_trend': 'Usage Trend', 'churn_flag': 'Churn'})
         fig_trend.add_vline(x=0.8, line_dash="dash", line_color="red")
-        st.plotly_chart(fig_trend, use_container_width=True)
+        st.plotly_chart(fig_trend, width='stretch')
 
     with g2:
         st.subheader("MRR par Industrie")
         fig_pie = px.pie(filtered_data, values='mrr_amount', names='industry', hole=0.4)
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width='stretch')
 
     # --- TABLEAU D'ALERTES ---
     st.markdown("---")
@@ -70,7 +70,7 @@ if data is not None:
         column_config={
             "usage_trend": st.column_config.ProgressColumn("Tendance Usage", min_value=0, max_value=1.5, format="%.2f"),
         },
-        use_container_width=True,
+        width='stretch',
         hide_index=True
     )
 

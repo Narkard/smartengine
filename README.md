@@ -12,6 +12,18 @@ Le dépôt est organisé selon la méthodologie du Sprint 1 :
 - `src/` : Scripts Python et pipeline de données (ignoré par Git).
 - `GEMINI.md` : Fiche de contexte pour l'outil d'orchestration.
 
+## État d'avancement
+
+### ✅ Sprint 1 : Initialisation (Terminé)
+- Mise en place de l'arborescence et de la stack technique.
+- Rédaction du brief client et du dossier de conception initial.
+- Veille technologique sur la stack (Gemini CLI, Scikit-Learn, n8n).
+
+### ✅ Sprint 2 : Traitement des données (Terminé)
+- Création du pipeline automatisé (`src/data_pipeline.py`).
+- Feature Engineering : Agrégation de l'usage, ratio de support client et encodage catégoriel.
+- Génération du **Master Dataset** (500 clients, 25+ features) prêt pour le ML.
+
 ## Installation et Utilisation
 
 ### Prérequis
@@ -30,8 +42,11 @@ Pour explorer les données :
 gemini --agent .gemini/agents/data-explorer.md
 ```
 
-## Équipe
-- **Groupe X**
-- Product Owner : [Nom]
-- Scrum Master : [Nom]
-- Développeurs IA : [Noms]
+## Backlog du Projet
+Le suivi des tâches et la gestion du backlog sont effectués sur l'outil suivant :
+- **Lien du Backlog** : [Lien vers votre outil (Notion/Trello/GitHub Projects)]
+
+## Équipe - Groupe X
+- **Product Owner** : [Nom de l'étudiant]
+- **Scrum Master** : [Nom de l'étudiant]
+- **Développeurs IA** : [Prénom 1], [Prénom 2]

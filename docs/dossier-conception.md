@@ -26,10 +26,11 @@ En conformité avec le RGPD et la loi Informatique et Libertés :
 ---
 ## 2. Traitement des données (Sprint 2)
 ### 2.1 Nettoyage et Agrégation
-Les données brutes ont été agrégées au niveau du compte (`account_id`). 
-- **Usage** : Somme et moyenne des `usage_count`, `usage_duration_secs` et `error_count`.
-- **Support** : Nombre de tickets par compte, temps moyen de résolution et score de satisfaction moyen.
-- **Master Dataset** : Fusion de toutes les sources pour créer un dataset unique de 500 lignes (un par client).
+Les données brutes issues de 5 fichiers CSV ont été nettoyées et agrégées au niveau du compte (`account_id`) pour créer un dataset de scoring unique.
+- **Usage (Feature Usage)** : Les données ont d'abord été agrégées par abonnement (`subscription_id`), puis rattachées aux comptes. Les métriques incluent le volume total d'usage, la durée moyenne de session et le nombre total d'erreurs techniques.
+- **Support (Support Tickets)** : Imputation des valeurs manquantes pour le `satisfaction_score` par la moyenne du dataset pour éviter de biaiser le modèle. Agrégation du nombre de tickets et du temps de résolution moyen par compte.
+- **Finances (Subscriptions)** : Extraction du MRR (Monthly Recurring Revenue) maximum et de la fréquence de facturation.
+- **Master Dataset** : Fusion finale de toutes les sources pour créer un dataset consolidé de **500 lignes** et **20 colonnes**, sauvegardé dans `/data/processed/master_dataset.csv`.
 
 ## 3. Modélisation (Sprint 3)
 ### 3.1 Algorithme
