@@ -6,15 +6,16 @@ Projet réalisé pour **RavenStack**, un SaaS B2B, dans le cadre du module "Scor
 ## Statut du Projet
 - **Sprint 1 : Exploration et Cadrage (Terminé ✅)**
 - **Sprint 2 : Préparation des données (Terminé ✅)**
-- **Sprint 3 : Modélisation (À venir)**
+- **Sprint 3 : Modélisation (Terminé ✅)**
+- **Sprint 4 : Déploiement et Pilotage (À venir)**
 
 ## Structure du Projet
-Le dépôt est organisé selon la méthodologie du Sprint 1 & 2 :
+Le dépôt est organisé selon la méthodologie du projet :
 - `.gemini/agents/` : Contient les agents IA spécialisés.
 - `data/` : Dossier des données. Les CSV bruts sont dans `data/raw/`.
 - `docs/` : Documentation (Veille, Brief, Dossier de conception, Standups).
 - `outputs/` : Contient le `master_dataset.csv` généré.
-- `src/` : Scripts Python (Pipeline de données, Entraînement).
+- `src/` : Scripts Python (Pipeline, Entraînement, Modèle `.pkl`).
 - `GEMINI.md` : Fiche de contexte pour l'outil d'orchestration.
 
 ## Installation et Utilisation
@@ -30,9 +31,9 @@ Le dépôt est organisé selon la méthodologie du Sprint 1 & 2 :
 3. Lancer l'outil : `gemini`
 
 ### Agents disponibles
-Pour traiter les données :
+Pour la modélisation :
 ```bash
-gemini --agent .gemini/agents/data-processor.md
+gemini --agent .gemini/agents/model-tuner.md
 ```
 
 ## Équipe
