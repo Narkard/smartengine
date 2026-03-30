@@ -1,5 +1,12 @@
-data/
-outputs/
-src/
+# Data (Ignore raw, but keep processed analytics)
+data/raw/
+data/processed/cleaned/
+data/processed/features/
+
+# Ignore local notebooks and exploration folders
 *.ipynb
 docs/exploration-*/
+
+# Ignore other files but keep the structure
+# Note: Usually we keep scripts, so we will allow src/
+# and specific outputs
