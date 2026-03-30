@@ -17,7 +17,7 @@ Ce document synthétise les résultats de l'exploration des données réalisée 
 L'équipe a identifié les variables suivantes comme étant les plus prometteuses pour le modèle de scoring :
 
 1.  **Indicateurs d'Usage** : `usage_count` et `usage_duration_secs` (une baisse soudaine d'activité est un signal fort).
-2.  **Satisfaction Client** : `satisfaction_score` et `ticket_count` (les clients mécontents ou sollicitant trop le support sont à risque).
+2.  **Satisfaction Client** : `satisfaction_score` et `ticket_count` (les clients mécontents ou sollicitant trop le support sont à risque). 
 3.  **Santé Financière** : `mrr_amount` et `auto_renew_flag` (l'impact financier et le mode de renouvellement).
 4.  **Expérience Utilisateur** : `error_count` (les frictions techniques peuvent mener au départ).
 
@@ -30,4 +30,4 @@ L'équipe a identifié les variables suivantes comme étant les plus prometteuse
 5.  Les erreurs techniques (`error_count`) sont-elles concentrées sur certaines fonctionnalités spécifiques ?
 
 ---
-*Dernière mise à jour : 11 mars 2026*
+*Dernière mise à jour : 29 mars 2026*

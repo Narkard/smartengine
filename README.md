@@ -1,27 +1,37 @@
-# smartEngine - RavenStack Churn Prediction
+# smartEngine - Système de prédiction de Churn
 
-Système intelligent de prédiction de churn pour RavenStack (SaaS B2B).
+## Contexte
+Projet réalisé pour **RavenStack**, un SaaS B2B, dans le cadre du module "Scoring prédictif et Marketing". L'objectif est de construire un système intelligent capable de prédire le taux d'attrition (churn) des clients.
 
-## Description du Projet
-smartEngine aide les équipes Customer Success de RavenStack à identifier les comptes à risque de résiliation en utilisant des techniques de machine learning sur les données d'usage, de support et d'abonnement.
+## Structure du Projet
+Le dépôt est organisé selon la méthodologie du Sprint 1 :
+- `.gemini/agents/` : Contient les agents IA spécialisés.
+- `data/` : Dossier des données (ignoré par Git). **Note :** Créer un sous-dossier `raw/` et y placer les CSV clients.
+- `docs/` : Documentation (Veille, Brief, Dossier de conception, Standups).
+- `outputs/` : Rapports et datasets générés (ignoré par Git).
+- `src/` : Scripts Python et pipeline de données (ignoré par Git).
+- `GEMINI.md` : Fiche de contexte pour l'outil d'orchestration.
 
-## Structure du Dépôt
-- `.gemini/agents/` : Définitions des agents IA spécialisés.
-- `data/raw/` : Données brutes de RavenStack (CSV).
-- `docs/` : Documentation du projet (Brief client, Dossier de conception, Veille).
-- `outputs/` : Rapports générés et datasets masterisés.
-- `src/` : Scripts Python (Pipeline, Entraînement, Alertes).
+## Installation et Utilisation
 
-## Installation
-1. Installer les dépendances : `pip install -r src/requirements.txt`
-2. Installer Gemini CLI : `npm install -g @google/gemini-cli`
+### Prérequis
+- Node.js (v18+)
+- Python (3.11+)
+- Gemini CLI : `npm install -g @google/gemini-cli`
 
-## Utilisation
-1. **Pipeline de données** : `python3 src/data_pipeline.py`
-2. **Entraînement du modèle** : `python3 src/train_model.py`
-3. **Génération d'alertes** : `python3 src/generate_alerts.py`
+### Démarrage
+1. Cloner le dépôt : `git clone https://github.com/Narkard/smartengine.git`
+2. Créer votre branche : `git checkout -b votre-prenom`
+3. Lancer l'outil : `gemini`
 
-## Équipe (Groupe X)
-- **Product Owner** : [Nom]
-- **Scrum Master** : [Nom]
-- **Développeurs IA** : Sophie, [Nom]
+### Agents disponibles
+Pour explorer les données :
+```bash
+gemini --agent .gemini/agents/data-explorer.md
+```
+
+## Équipe
+- **Groupe X**
+- Product Owner : [Nom]
+- Scrum Master : [Nom]
+- Développeurs IA : [Noms]
