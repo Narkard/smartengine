@@ -1,43 +1,26 @@
-# smartEngine - Système de prédiction de Churn
+# smartEngine - Churn Prediction for SaaS B2B
 
-## Contexte
-Projet réalisé pour **RavenStack**, un SaaS B2B, dans le cadre du module "Scoring prédictif et Marketing". L'objectif est de construire un système intelligent capable de prédire le taux d'attrition (churn) des clients.
+## Project Status
+- **Sprint 1 : Infrastructure & Exploration (Done ✅)**
+- **Sprint 2 : Data Preparation & Feature Engineering (Done ✅)**
+- **Sprint 3 : Modeling (Next)**
 
-## Statut du Projet
-- **Sprint 1 : Exploration et Cadrage (Terminé ✅)**
-- **Sprint 2 : Préparation des données (Terminé ✅)**
-- **Sprint 3 : Modélisation (Terminé ✅)**
-- **Sprint 4 : Déploiement et Pilotage (À venir)**
+## Repository Structure (End of Sprint 2)
+- `.gemini/agents/` : Specialized AI agents for data exploration and engineering.
+- `data/` : 
+    - `raw/` : Original CSV files (never modified).
+    - `processed/` : Cleaned and analytical data (`analytics.csv`).
+- `docs/` : Documentation (Design dossier, brief, standups).
+- `outputs/` : Reports and results (`rapport-nettoyage.md`).
+- `src/` : Scripts for cleaning, feature building, and merging.
+- `GEMINI.md` : Orchestration context.
 
-## Structure du Projet
-Le dépôt est organisé selon la méthodologie du projet :
-- `.gemini/agents/` : Contient les agents IA spécialisés.
-- `data/` : Dossier des données. Les CSV bruts sont dans `data/raw/`.
-- `docs/` : Documentation (Veille, Brief, Dossier de conception, Standups).
-- `outputs/` : Contient le `master_dataset.csv` généré.
-- `src/` : Scripts Python (Pipeline, Entraînement, Modèle `.pkl`).
-- `GEMINI.md` : Fiche de contexte pour l'outil d'orchestration.
+## Usage
+1.  **Cleaning**: `python3 src/clean_data.py`
+2.  **Features**: `python3 src/build_features.py`
+3.  **Analytics Table**: `python3 src/build_analytics.py`
 
-## Installation et Utilisation
-
-### Prérequis
-- Node.js (v18+)
-- Python (3.11+)
-- Gemini CLI : `npm install -g @google/gemini-cli`
-
-### Démarrage
-1. Cloner le dépôt : `git clone https://github.com/Narkard/smartengine.git`
-2. Créer votre branche : `git checkout -b Sophie`
-3. Lancer l'outil : `gemini`
-
-### Agents disponibles
-Pour la modélisation :
-```bash
-gemini --agent .gemini/agents/model-tuner.md
-```
-
-## Équipe
-- **Groupe X**
-- Product Owner : [Nom]
-- Scrum Master : [Nom]
-- Développeurs IA : Sophie, [Nom]
+## Team (Sprint 2 Roles)
+- **Product Owner** : [Nouveau Nom]
+- **Scrum Master** : [Nouveau Nom]
+- **IA Developer** : Sophie

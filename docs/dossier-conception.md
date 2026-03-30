@@ -1,48 +1,30 @@
 # Dossier de Conception - smartEngine
 
-## 1. Cadrage du Projet
+## 1. Cadrage du Projet (Sprint 1)
+*Contenu du Sprint 1 (Cadrage métier, RGPD, Outils)*
 
-### 1.1 Contexte Métier
-RavenStack est un SaaS B2B confronté à un enjeu de rétention client. Chaque départ (churn) entraîne une perte de revenu récurrent mensuel (MRR). Le projet smartEngine doit permettre d'anticiper ces départs.
+## 2. Traitement des Données (Sprint 2)
 
-### 1.2 Objectifs
-- Prédire la probabilité de churn pour chaque compte.
-- Prioriser les actions des équipes Customer Success (CS).
-- Automatiser les notifications pour les comptes à haut risque.
+### 2.1 État des données brutes
+Avant nettoyage, les données présentaient :
+- Des types de dates incohérents (stockés en chaînes).
+- **825 valeurs manquantes** dans le score de satisfaction client (`support_tickets.csv`).
+- Des disparités de granularité (comptes vs tickets vs usage).
 
-### 1.3 Contraintes RGPD et Éthique
-En conformité avec le RGPD et la loi Informatique et Libertés :
-- **Minimisation des données** : Seules les données nécessaires à la prédiction du churn sont collectées et traitées.
-- **Article 22** : L'utilisation d'un score automatisé doit rester une aide à la décision pour les équipes CS et non une décision entièrement automatisée ayant des impacts juridiques majeurs.
-- **Transparence** : Les critères influençant le score doivent être explicables pour éviter les "boîtes noires" et les biais algorithmiques.
+### 2.2 Stratégies de Nettoyage
+- **Imputation** : Nous avons choisi l'imputation par la **médiane** pour le `satisfaction_score`. Cette stratégie permet de ne pas supprimer 40% des tickets tout en restant robuste aux valeurs extrêmes.
+- **Conversion** : Toutes les colonnes temporelles ont été normalisées au format `datetime`.
+- **Dédoublonnage** : Aucune suppression n'a été nécessaire après vérification.
 
-### 1.4 Choix des Outils
-- **Gestionnaire de version** : GitHub pour la collaboration distribuée.
-- **Orchestration IA** : Gemini CLI pour la génération de code et l'analyse automatisée.
-- **Data Science** : Python, pandas et scikit-learn pour le pipeline de données et la modélisation.
-- **Dashboarding** : Streamlit pour une interface légère et rapide à déployer.
-- **Automatisation** : n8n pour les alertes de risque.
+### 2.3 Table Analytique & Features
+- **Granularité** : Une ligne par `account_id` (Compte client).
+- **Features créées** :
+    - *Usage* : Sommes, moyennes et écart-types de `usage_count` et `usage_duration`.
+    - *Support* : Nombre de tickets, taux d'escalade (`high_escalation_ratio`) et délai de résolution moyen.
+    - *Engagement* : Recréation du profil du dernier abonnement actif (MRR, Plan, Fréquence).
+- **Target** : Variable binaire `target_churn` (1 si résilié, 0 sinon).
 
----
-## 2. Traitement des données (Sprint 2)
-### 2.1 Nettoyage et Agrégation
-Les données brutes ont été agrégées au niveau du compte (`account_id`). 
-- **Usage** : Somme et moyenne des `usage_count`, `usage_duration_secs` et `error_count`.
-- **Support** : Nombre de tickets par compte, temps moyen de résolution et score de satisfaction moyen.
-- **Master Dataset** : Fusion de toutes les sources pour créer un dataset unique de 500 lignes (un par client).
+### 2.4 Retour d'expérience Agent
+L'utilisation de l'agent **Data Engineer** (`data-processor.md`) a permis d'automatiser la génération des scripts de nettoyage et de jointure. Quelques corrections manuelles ont été apportées sur les types de jointures (`left join`) pour garantir qu'aucun client ne soit perdu lors de la fusion.
 
-## 3. Modélisation (Sprint 3)
-### 3.1 Algorithme
-Utilisation d'un **RandomForestClassifier** pour sa robustesse et sa capacité à gérer les variables non-linéaires.
-### 3.2 Performance
-Le modèle atteint une précision de **76%**. On note une importance forte des variables d'usage (`usage_count_mean`) et de support (`resolution_time_hours`).
-
-## 4. Déploiement (Sprint 4)
-### 4.1 Dashboard
-Développement d'une interface **Streamlit** permettant :
-- Visualisation des KPIs (MRR, Taux de Churn).
-- Analyse de la corrélation Usage/Revenu.
-- Tableau d'alertes dynamique pour les équipes Customer Success.
-
-*Dernière mise à jour : 29 mars 2026*
-
+*Dernière mise à jour : 30 mars 2026*
