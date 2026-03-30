@@ -44,7 +44,7 @@ gemini --agent .gemini/agents/data-explorer.md
 
 ## Backlog du Projet
 Le suivi des tâches et la gestion du backlog sont effectués sur l'outil suivant :
-- **Lien du Backlog** : [Lien vers votre outil (Notion/Trello/GitHub Projects)]
+- **Lien du Backlog** : [GitHub Projects](https://github.com/Narkard/smartengine/projects)
 
 ## Équipe - Groupe X
 - **Product Owner** : [Nom de l'étudiant]
