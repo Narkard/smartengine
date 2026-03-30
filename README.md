@@ -46,7 +46,7 @@ gemini --agent .gemini/agents/data-explorer.md
 Le suivi des tâches et la gestion du backlog sont effectués sur l'outil suivant :
 - **Lien du Backlog** : [GitHub Projects](https://github.com/Narkard/smartengine/projects)
 
-## Équipe - Groupe X
-- **Product Owner** : [Nom de l'étudiant]
-- **Scrum Master** : [Nom de l'étudiant]
-- **Développeurs IA** : [Prénom 1], [Prénom 2]
+## Équipe - Groupe 1 (Sprint 2)
+- **Product Owner** : Joanne
+- **Scrum Master** : Maé
+- **Développeurs IA** : Léo, Quentin, Sophie

@@ -1,4 +1,4 @@
-# Projet smartEngine - Groupe [X]
+# Projet smartEngine - Groupe 1
 
 ## Contexte
 Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B.
@@ -14,10 +14,15 @@ Nous construisons **smartEngine**, un système de prédiction de churn pour Rave
 - Objectif : Produire la table analytique `data/processed/analytics.csv`.
 - Scripts : `src/clean_data.py`, `src/build_features.py`, `src/build_analytics.py`.
 
+## Rôles (Sprint 1)
+- **Scrum Master** : Léo
+- **Product Owner** : Quentin
+- **Développeurs IA** : Joanne, Maé, Sophie
+
 ## Rôles du Sprint 2
-- **Scrum Master** : [Nom de l'étudiant] (Rotation)
-- **Product Owner** : [Nom de l'étudiant] (Rotation)
-- **Développeurs IA** : [Prénom 1], [Prénom 2]
+- **Scrum Master** : Maé
+- **Product Owner** : Joanne
+- **Développeurs IA** : Léo, Quentin, Sophie
 
 ## Conventions
 - Scripts Python -> `/src/`
