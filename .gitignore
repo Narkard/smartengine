@@ -8,9 +8,12 @@ data/processed/features/
 # AUTORISER UNIQUEMENT LA TABLE ANALYTIQUE FINALE
 !data/processed/analytics.csv
 
-# 2. Outputs (AUTORISER LE RAPPORT DE NETTOYAGE)
+# 2. Outputs (AUTORISER LE RAPPORT DE NETTOYAGE ET LES MODELES)
 outputs/*
 !outputs/rapport-nettoyage.md
+!outputs/models/
+!outputs/scores.csv
+!outputs/rapport-modele.md
 
 # 3. Code (AUTORISER SRC)
 src/__pycache__/
