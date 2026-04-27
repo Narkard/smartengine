@@ -8,24 +8,30 @@ from sklearn.metrics import classification_report, confusion_matrix
 
 # Configuration des chemins
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-DATA_PATH = os.path.join(BASE_DIR, "outputs", "master_dataset.csv")
-MODEL_DIR = os.path.join(BASE_DIR, "src")
-MODEL_PATH = os.path.join(MODEL_DIR, "churn_model.pkl")
+DATA_PATH = os.path.join(BASE_DIR, "data", "processed", "analytics.csv")
+MODEL_DIR = os.path.join(BASE_DIR, "outputs", "models")
+MODEL_PATH = os.path.join(MODEL_DIR, "churn_model.joblib")
 
 def train_gbm_model():
     print("--- 🚀 Sprint 3 : Entraînement du Modèle (GBM) ---")
     
     if not os.path.exists(DATA_PATH):
-        print(f"❌ Erreur : {DATA_PATH} introuvable.")
+        print(f"❌ Erreur : {DATA_PATH} introuvable. Exécutez d'abord les scripts du Sprint 2.")
         return
 
     # 1. Chargement et Nettoyage
     df = pd.read_csv(DATA_PATH)
     
-    # Exclusion des IDs et dates
-    exclude = ['account_id', 'account_name', 'signup_date', 'country', 'referral_source']
-    X = df.drop(columns=[c for c in exclude if c in df.columns] + ['churn_flag'])
-    y = df['churn_flag'].astype(int)
+    # Exclusion des IDs, noms, dates et colonnes non-numériques ou redondantes
+    exclude = [
+        'account_id', 'account_name', 'signup_date', 'country', 
+        'referral_source', 'plan_tier_x', 'is_trial', 'churn_flag'
+    ]
+    X = df.drop(columns=[c for c in exclude if c in df.columns] + ['target_churn'])
+    y = df['target_churn'].astype(int)
+    
+    # 1.5 Gestion des valeurs manquantes (NaN)
+    X = X.fillna(0)
 
     # 2. Split
     X_train, X_test, y_train, y_test = train_test_split(
@@ -33,8 +39,7 @@ def train_gbm_model():
     )
 
     # 3. Entraînement GBM
-    print("Entraînement du GradientBoostingClassifier...")
-    # On utilise un learning_rate plus faible et on augmente n_estimators
+    print("Entraînement du GradientBoostingClassifier sur analytics.csv...")
     model = GradientBoostingClassifier(
         n_estimators=200, 
         learning_rate=0.05,
@@ -45,7 +50,6 @@ def train_gbm_model():
     model.fit(X_train, y_train)
 
     # 4. Évaluation
-    # On peut aussi jouer sur le seuil de décision si nécessaire
     y_pred = model.predict(X_test)
     print("\n✅ Évaluation du modèle :")
     print(classification_report(y_test, y_pred))
@@ -56,10 +60,11 @@ def train_gbm_model():
     # 5. Features Importances
     importances = model.feature_importances_
     feature_importance_df = pd.DataFrame({'feature': X.columns, 'importance': importances})
-    print("\n🔍 Top 5 variables :")
+    print("\n🔍 Top 5 variables les plus importantes :")
     print(feature_importance_df.sort_values(by='importance', ascending=False).head(5))
 
     # 6. Sauvegarde
+    os.makedirs(MODEL_DIR, exist_ok=True)
     joblib.dump(model, MODEL_PATH)
     print(f"\n💾 Modèle sauvegardé dans : {MODEL_PATH}")
 
