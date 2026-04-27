@@ -39,8 +39,8 @@ def generate_scores():
     
     # 5. Définition des niveaux de risque
     def get_risk_level(score):
-        if score < 0.3: return "Low"
-        elif score < 0.7: return "Medium"
+        if score < 0.35: return "Low"
+        elif score < 0.65: return "Medium"
         else: return "High"
         
     results['risk_level'] = results['churn_score'].apply(get_risk_level)

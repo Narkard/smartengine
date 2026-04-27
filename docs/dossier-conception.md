@@ -74,11 +74,33 @@ L'agent `data-engineer` a été configuré pour automatiser ces tâches.
 - **Standardisation** : Centre les données (moyenne 0, écart-type 1). Préférable pour les modèles linéaires et les réseaux de neurones.
 - *Note : Les arbres de décision (Random Forest) n'en ont généralement pas besoin.*
 
-## 3. Modélisation (Sprint 3)
-### 3.1 Algorithme
-Utilisation d'un **RandomForestClassifier** pour sa robustesse et sa capacité à gérer les variables non-linéaires.
-### 3.2 Performance
-Le modèle atteint une précision de **76%**. On note une importance forte des variables d'usage (`usage_count_mean`) et de support (`resolution_time_hours`).
+## 3. Modélisation et Évaluation (Sprint 3)
+
+### 3.1 Choix de l'Algorithme : Random Forest
+Nous avons sélectionné le **Random Forest** pour sa capacité à gérer des relations non-linéaires complexes entre les features d'usage et de support. Contrairement à une régression logistique, il capture mieux les seuils critiques (ex: une baisse d'usage brutale est plus prédictive qu'une baisse linéaire).
+- **Justification Métier** : Le modèle est "robuste" et moins sensible aux valeurs extrêmes qui persistent malgré le nettoyage, garantissant une stabilité des scores pour les équipes CS.
+
+### 3.2 Gestion du déséquilibre des classes
+Le dataset présente une majorité de comptes sains (Non-Churn). Nous avons utilisé le paramètre `class_weight='balanced'` pour forcer l'algorithme à accorder autant d'importance à la détection d'un churn (classe minoritaire) qu'à celle d'un compte stable.
+
+### 3.3 Métriques retenues : Le Rappel (Recall) avant tout
+Pour RavenStack, le **Recall est la priorité absolue** :
+- **Justification** : Le coût d'un "Churn non détecté" (perte de MRR sèche) est bien plus élevé que le coût d'une "Fausse Alerte" (un appel de courtoisie du Customer Success vers un client qui n'allait pas partir). Il vaut mieux contacter 10 clients stables par erreur que de rater 1 client sur le départ.
+
+### 3.4 Interprétation des Features Importantes
+Les variables d'usage (`usage_trend_30d`) et de support (`critical_ratio`) dominent le modèle. Cela confirme l'hypothèse métier : un client qui réduit son activité tout en multipliant les tickets critiques est en phase de rupture imminente.
+
+### 3.5 Analyse des Biais et Limites
+- **Biais** : Une analyse par industrie montre que le modèle est légèrement plus "sévère" avec le secteur EdTech. Cela nécessite une vigilance humaine lors de l'interprétation.
+- **Limites** : Le modèle ne prend pas encore en compte les données de sentiment (analyse de texte des tickets), ce qui pourrait affiner la prédiction.
+
+### 3.6 Justification des Seuils de Risque (PO Vision)
+Nous avons défini trois segments d'action pour l'équipe Customer Success :
+- **High (>= 0.65)** : **Priorité Absolue.** Probabilité de départ imminente. Action : Appel direct du CSM sous 24h avec proposition commerciale (remise ou formation offerte).
+- **Medium (0.35 - 0.65)** : **Vigilance.** Engagement en baisse. Action : Envoi d'un mail personnalisé automatisé proposant un point de situation.
+- **Low (< 0.35)** : **Sain.** Suivi standard.
+
+**Logique de Rentabilité** : Les seuils ont été calibrés pour maximiser le Recall sur le segment High. Le coût opérationnel d'intervention est concentré là où la probabilité de sauvetage est la plus forte, optimisant ainsi le ROI du service CS.
 
 ## 4. Déploiement (Sprint 4)
 ### 4.1 Dashboard

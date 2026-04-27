@@ -1,4 +1,4 @@
-account_id,churn_probability,risk_level
+account_id,churn_score,risk_level
 A-2e4581,0.91,High
 A-43a9e3,0.28,Low
 A-0a282f,0.82,High
