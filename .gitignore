@@ -1,5 +1,7 @@
-data/
-outputs/
-src/
+data/raw/
+data/processed/
 *.ipynb
 docs/exploration-*/
+*.log
+__pycache__/
+.DS_Store

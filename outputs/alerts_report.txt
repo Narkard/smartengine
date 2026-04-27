@@ -1,0 +1,121 @@
+===================================================
+🚨 RAPPORT D'ALERTES SMARTENGINE - 2026-03-30 11:33:00
+===================================================
+Nombre de clients analysés : 390
+Nombre d'alertes générées (Seuil > 15.0%) : 36
+---------------------------------------------------
+
+ID: A-de24d5 | Risque: 77.3% | MRR: 245$
+  -> SIGNAL: Volume de tickets important (7)
+
+ID: A-019782 | Risque: 70.4% | MRR: 0$
+
+ID: A-68f37c | Risque: 65.1% | MRR: 796$
+  -> SIGNAL: Taux d'erreurs élevé (0.62)
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-05d3b3 | Risque: 65.1% | MRR: 3781$
+  -> SIGNAL: Volume de tickets important (6)
+
+ID: A-ced9aa | Risque: 63.3% | MRR: 147$
+  -> SIGNAL: Taux d'erreurs élevé (0.71)
+  -> SIGNAL: Volume de tickets important (7)
+
+ID: A-6a4e2d | Risque: 56.6% | MRR: 686$
+
+ID: A-3793ee | Risque: 55.6% | MRR: 9751$
+  -> SIGNAL: Volume de tickets important (4)
+
+ID: A-8bde0c | Risque: 52.6% | MRR: 2388$
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-d4e0d4 | Risque: 52.2% | MRR: 23283$
+  -> SIGNAL: Taux d'erreurs élevé (0.67)
+  -> SIGNAL: Volume de tickets important (4)
+
+ID: A-751c58 | Risque: 50.3% | MRR: 1349$
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-9affe6 | Risque: 48.7% | MRR: 1127$
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-751bd4 | Risque: 42.3% | MRR: 0$
+  -> SIGNAL: Volume de tickets important (6)
+
+ID: A-55f257 | Risque: 29.6% | MRR: 4179$
+  -> SIGNAL: Volume de tickets important (6)
+
+ID: A-4d1e75 | Risque: 29.5% | MRR: 0$
+
+ID: A-a7bd4b | Risque: 29.4% | MRR: 342$
+  -> SIGNAL: Taux d'erreurs élevé (0.67)
+  -> SIGNAL: Volume de tickets important (6)
+
+ID: A-0a282f | Risque: 28.9% | MRR: 98$
+  -> SIGNAL: Taux d'erreurs élevé (0.58)
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-0cc442 | Risque: 28.8% | MRR: 8955$
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-5ed98d | Risque: 27.3% | MRR: 0$
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-b44e3e | Risque: 27.2% | MRR: 7960$
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-6dee43 | Risque: 22.5% | MRR: 0$
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-bb3bd4 | Risque: 21.7% | MRR: 437$
+  -> SIGNAL: Volume de tickets important (11)
+
+ID: A-fa3095 | Risque: 20.8% | MRR: 1330$
+  -> SIGNAL: Taux d'erreurs élevé (0.71)
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-c7e58b | Risque: 20.8% | MRR: 0$
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-b54c01 | Risque: 20.5% | MRR: 551$
+  -> SIGNAL: Taux d'erreurs élevé (0.74)
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-7988d1 | Risque: 20.4% | MRR: 0$
+  -> SIGNAL: Taux d'erreurs élevé (0.61)
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-02cd81 | Risque: 18.6% | MRR: 2156$
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-a09355 | Risque: 18.5% | MRR: 686$
+  -> SIGNAL: Taux d'erreurs élevé (0.6)
+  -> SIGNAL: Volume de tickets important (5)
+
+ID: A-f92792 | Risque: 17.8% | MRR: 361$
+  -> SIGNAL: Taux d'erreurs élevé (0.58)
+
+ID: A-6e08f3 | Risque: 17.8% | MRR: 247$
+
+ID: A-54d94a | Risque: 17.7% | MRR: 513$
+  -> SIGNAL: Volume de tickets important (4)
+
+ID: A-f97b9a | Risque: 17.5% | MRR: 784$
+  -> SIGNAL: Taux d'erreurs élevé (0.59)
+  -> SIGNAL: Volume de tickets important (7)
+
+ID: A-5f2961 | Risque: 17.3% | MRR: 304$
+
+ID: A-90a8c8 | Risque: 16.9% | MRR: 2985$
+  -> SIGNAL: Volume de tickets important (4)
+
+ID: A-96bbc6 | Risque: 16.6% | MRR: 741$
+  -> SIGNAL: Volume de tickets important (3)
+
+ID: A-00cac8 | Risque: 16.2% | MRR: 931$
+
+ID: A-c45b23 | Risque: 15.0% | MRR: 5174$
+  -> SIGNAL: Volume de tickets important (3)
+
+
+===================================================
