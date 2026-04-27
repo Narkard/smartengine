@@ -3,30 +3,30 @@
 ## Contexte
 Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B.
 
-## Résumé du Sprint 1
-- **Infrastucture** : Dépôt GitHub configuré, arborescence complète, GEMINI.md initialisé.
-- **Analyse** : Brief client reformulé, veille technique (Scikit-learn, Streamlit, etc.).
-- **Exploration** : Première analyse du dataset RavenStack (5 CSV).
-- **Livrables** : Dossier de conception (Cadrage), Rapport de veille, Backlog.
+## Résumé des Sprints
+- **Sprint 1 (Terminé)** : Infrastructure mise en place, brief reformulé, veille technique effectuée et première exploration du dataset réalisée.
+- **Sprint 2 (Terminé)** : Pipeline de nettoyage, table analytics.csv avec 28 variables et 500 comptes.
+- **Sprint 3 (En cours)** : Modélisation prédictive et évaluation.
 
-## Sprint en cours
-**Sprint 2 - Traitement des données**
-- Objectif : Produire la table analytique `data/processed/analytics.csv`.
-- Scripts : `src/clean_data.py`, `src/build_features.py`, `src/build_analytics.py`.
-
-## Rôles (Sprint 1)
-- **Scrum Master** : Léo
-- **Product Owner** : Quentin
-- **Développeurs IA** : Joanne, Maé, Sophie
-
-## Rôles du Sprint 2
-- **Scrum Master** : Maé
-- **Product Owner** : Joanne
-- **Développeurs IA** : Léo, Quentin, Sophie
+## Rôles Sprint 3
+- **Scrum Master** : Quentin
+- **Product Owner** : Maé
+- **Développeurs IA** : Léo, Joanne, Sophie
 
 ## Conventions
 - Scripts Python -> `/src/`
 - Rapports -> `/outputs/`
-- Table analytique -> `data/processed/analytics.csv`
+- Données transformées -> `/data/processed/analytics.csv`
+- Modèles -> `outputs/models/churn_model.joblib`
+- Scores -> `outputs/scores.csv`
 - Ne jamais modifier `/data/raw/`
 - Tous les rapports sont en français
+
+## Workflow Git
+(Workflow inchangé...)
+```bash
+# ... (contenu existant)
+```
+
+## Sprint en cours
+Sprint 3 - Modélisation
