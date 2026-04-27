@@ -12,6 +12,13 @@ OUTPUT_PATH = os.path.join(BASE_DIR, "outputs", "scores.csv")
 def generate_scores():
     print("--- Génération des Scores de Risque ---")
     
+    if not os.path.exists(DATA_PATH):
+        print(f"Erreur : Le fichier {DATA_PATH} est introuvable.")
+        return
+    if not os.path.exists(MODEL_PATH):
+        print(f"Erreur : Le fichier {MODEL_PATH} est introuvable.")
+        return
+
     # 1. Chargement
     df = pd.read_csv(DATA_PATH)
     model = joblib.load(MODEL_PATH)
@@ -22,7 +29,6 @@ def generate_scores():
     X = X.drop(columns=['account_id'], errors='ignore')
     
     # 3. Calcul des probabilités
-    # La probabilité de churn est la deuxième colonne de predict_proba
     scores = model.predict_proba(X)[:, 1]
     
     # 4. Création du DataFrame de sortie

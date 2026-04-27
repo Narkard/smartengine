@@ -1,0 +1,93 @@
+{
+    "global_metrics": {
+        "accuracy": 0.78,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1_score": 0.0,
+        "auc_roc": 0.46998834498834496
+    },
+    "bias_analysis": {
+        "industry": {
+            "FinTech": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 23
+            },
+            "DevTools": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 21
+            },
+            "Cybersecurity": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 25
+            },
+            "EdTech": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 14
+            },
+            "HealthTech": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 17
+            }
+        },
+        "country": {
+            "US": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 62
+            },
+            "AU": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 7
+            },
+            "UK": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 12
+            },
+            "CA": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 3
+            },
+            "DE": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 5
+            },
+            "IN": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 7
+            },
+            "FR": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 4
+            }
+        },
+        "plan_tier": {
+            "Basic": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 42
+            },
+            "Pro": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 25
+            },
+            "Enterprise": {
+                "recall": 0.0,
+                "precision": 0.0,
+                "sample_size": 33
+            }
+        }
+    },
+    "feature_importances": {}
+}
