@@ -1,54 +1,54 @@
-# Rapport de Nettoyage des Données - Sprint 2 (Groupe 1)
+# Rapport de Nettoyage des Données - Sprint 2
 
-Ce document détaille l'audit de qualité et les traitements appliqués aux données brutes de RavenStack pour garantir la fiabilité du modèle de prédiction du churn.
+Ce rapport documente les opérations de nettoyage effectuées sur les données brutes pour garantir la fiabilité de la table analytique finale.
 
-## 1. Analyse par Fichier CSV
+## 1. Analyse par fichier CSV
 
-### 1.1 ravenstack_accounts.csv
-- **Problèmes identifiés** : Aucun. Les données sont structurellement saines.
-- **Stratégie** : Conservation intégrale.
-- **Résultat** : 500 lignes avant / 500 lignes après (100% conservé).
+### 1.1 Accounts (`ravenstack_accounts.csv`)
+| Problème | Volume | Stratégie | Justification | Résultat |
+| :--- | :--- | :--- | :--- | :--- |
+| Source cible non fiable | 100% des lignes | Suppression de `churn_flag` | La colonne sous-évaluait le churn réel (110 vs 352). | Colonne exclue |
+| Chemins absolus | N/A | Abstraction relative | Portabilité du code. | OK |
 
-### 1.2 ravenstack_subscriptions.csv
-- **Problèmes identifiés** : 
-    - Valeurs manquantes : `end_date` (90.28%).
-    - Outliers : Présence de valeurs MRR extrêmes (> percentile 99).
-- **Stratégies choisies** : 
-    - `end_date` : Conservation des valeurs nulles (signifiant un abonnement actif).
-    - `mrr_amount` : **Winsorisation** au 99ème percentile.
-- **Justification** : Le MRR extrême peut biaiser les moyennes de revenus. Le plafonnement permet de garder ces clients dans l'analyse sans fausser le modèle.
-- **Résultat** : 5000 lignes avant / 5000 lignes après (100% conservé).
+### 1.2 Subscriptions (`ravenstack_subscriptions.csv`)
+| Problème | Volume | Stratégie | Justification | Résultat |
+| :--- | :--- | :--- | :--- | :--- |
+| Types incorrects | 100% des lignes | Conversion `to_datetime` | Nécessaire pour les calculs d'ancienneté. | Dates valides |
+| Valeurs manquantes | 4514 lignes (`end_date`) | Conservation | Normal pour les abonnements actifs. | Inchangé |
+| Outliers (MRR) | 46 lignes (> 17114.0) | Winsorisation (Clip au Q99) | Éviter que des comptes extrêmes ne faussent les moyennes. | MRR plafonné |
+| Orphelins | 0 identifié | Vérification de l'existence | Garantir l'intégrité référentielle. | 100% conservé |
+| Source cible non fiable | 100% des lignes | Suppression de `churn_flag` | Cohérence avec la table Accounts. | Colonne exclue |
 
-### 1.3 ravenstack_feature_usage.csv
-- **Problèmes identifiés** : Absence de la colonne `account_id` (clé primaire du projet).
-- **Stratégie** : Jointure via `subscription_id` puis agrégation par compte.
-- **Justification** : Nécessaire pour ramener l'usage au niveau du client unique.
-- **Résultat** : 25000 lignes avant / 25000 lignes après (100% conservé).
+### 1.3 Feature Usage (`ravenstack_feature_usage.csv`)
+| Problème | Volume | Stratégie | Justification | Résultat |
+| :--- | :--- | :--- | :--- | :--- |
+| Types incorrects | 100% des lignes | Conversion `to_datetime` | Permet le calcul de récence et de tendances. | Dates valides |
+| Qualité globale | Élevée | Aucune suppression | Données complètes et structurées. | 25000 lignes |
 
-### 1.4 ravenstack_support_tickets.csv
-- **Problèmes identifiés** : 
-    - Valeurs manquantes : `satisfaction_score` (**41.25%**, soit 825 lignes).
-- **Stratégie** : **Imputation par la médiane**.
-- **Justification** : Supprimer 41% des tickets réduirait drastiquement la représentativité du support. La médiane est préférée à la moyenne car elle est moins sensible aux notes extrêmes.
-- **Résultat** : 2000 lignes avant / 2000 lignes après (100% conservé).
+### 1.4 Support Tickets (`ravenstack_support_tickets.csv`)
+| Problème | Volume | Stratégie | Justification | Résultat |
+| :--- | :--- | :--- | :--- | :--- |
+| Valeurs manquantes | 825 lignes (Score) | Imputation par la médiane | 41% de manquants ; la médiane est moins sensible aux extrêmes. | Score complété |
+| Types incorrects | 100% des lignes | Conversion `to_datetime` | Calcul du délai de résolution. | Dates valides |
 
-### 1.5 ravenstack_churn_events.csv
-- **Problèmes identifiés** : 
-    - Valeurs manquantes : `feedback_text` (24.67%).
-- **Stratégie** : Remplacement par une valeur par défaut ("No feedback provided").
-- **Justification** : Préserve l'événement de churn tout en nettoyant les données pour les analyses textuelles futures.
-- **Résultat** : 600 lignes avant / 600 lignes après (100% conservé).
+### 1.5 Churn Events (`ravenstack_churn_events.csv`)
+| Problème | Volume | Stratégie | Justification | Résultat |
+| :--- | :--- | :--- | :--- | :--- |
+| Valeurs manquantes | 148 lignes (Feedback) | Remplacement par "No feedback" | Donnée textuelle ; évite les erreurs de traitement NLP. | Texte normalisé |
+| Incohérence cible | 352 comptes uniques | Promotion en "Source de Vérité" | Plus fiable que le flag statique d'origine. | Cible recalculée |
 
-## 2. Bilan Global de la Qualité
+---
 
-| Indicateur | Valeur |
+## 2. Bilan Global
+
+| Métrique | Valeur |
 | :--- | :--- |
-| **Nombre de comptes initiaux** | 500 |
-| **Nombre de comptes finaux** | 500 |
-| **Taux de conservation des données** | **100%** |
-| **Principale transformation** | Imputation massive du Support et Winsorisation MRR |
+| **Nombre total de lignes traitées** | 33 100 |
+| **Lignes supprimées** | 0 (priorité à l'imputation et au clipping) |
+| **Taux de conservation** | 100% |
+| **Taux de perte** | 0% |
 
-## 3. Conclusion
-Les données sont désormais typées, complétées et prêtes pour la modélisation. La table analytique `data/processed/analytics.csv` contient 29 variables exploitables sans risque de biais majeur lié aux valeurs manquantes.
+**Note sur la Cible** : Bien que 100% des lignes aient été conservées, la définition du "Churn" a radicalement changé, passant d'un flag binaire statique à une détection basée sur les événements réels.
 
-*Fait le 30 mars 2026 par l'équipe du Groupe 1.*
+---
+*Rapport généré automatiquement le 27/04/2026 dans le cadre du Sprint 2.*

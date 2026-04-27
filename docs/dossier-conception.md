@@ -26,15 +26,37 @@ En conformité avec le RGPD et la loi Informatique et Libertés :
 ---
 ## 2. Traitement des données (Sprint 2)
 
-### 2.1 Nettoyage et Agrégation
-Les données brutes ont été nettoyées (imputation par la médiane pour le support, winsorisation du MRR) et agrégées par compte.
+### 2.1 État des données brutes et nettoyage
+Avant traitement, les données présentaient plusieurs anomalies :
+- **churn_flag** : Incohérent entre les sources (110 vs 352 événements réels).
+- **support_tickets** : 41% de valeurs manquantes pour le `satisfaction_score`.
+- **subscriptions** : Présence d'outliers extrêmes sur le MRR (comptes tests ou erreurs de saisie).
 
-### 2.2 Feature Engineering (Variables clés)
-Nous avons créé des variables comportementales pour capturer les signaux de churn :
-- **Usage Trend (30j)** : Variation de l'usage entre le dernier mois et la moyenne historique. Un score négatif indique une baisse d'activité, signal fort de désengagement.
-- **Engagement (Recency)** : Nombre de jours depuis la dernière action. Plus ce chiffre est élevé, plus le risque de churn augmente.
-- **Ratio Critique (Support)** : Part des tickets "Urgent/High" dans le total des tickets. Un client qui n'a que des problèmes graves est plus susceptible de partir.
-- **Diversité d'usage** : Nombre de fonctionnalités différentes utilisées. Un client qui n'utilise qu'une seule feature tire moins de valeur du produit.
+**Stratégies choisies :**
+- **Imputation** : Médiane pour les scores de satisfaction (robuste aux extrêmes).
+- **Winsorisation** : Clipping du MRR au 99ème percentile.
+- **Exclusion** : Suppression radicale de la colonne `churn_flag` d'origine pour éviter toute pollution du modèle.
+
+### 2.2 Construction de la table analytique
+La table `analytics.csv` est construite par jointures successives à partir du référentiel `accounts_cleaned.csv` :
+- **Granularité** : Une ligne par `account_id`.
+- **Méthode de jointure** : `left join` systématique pour conserver tous les comptes, même ceux n'ayant pas encore utilisé le produit ou ouvert de tickets.
+- **Cible (Target)** : Recalculée via la présence ou non dans `churn_cleaned.csv`.
+
+### 2.3 Feature Engineering (Détails et Justification)
+| Feature | Source | Justification Métier |
+| :--- | :--- | :--- |
+| `usage_trend_30d` | Usage | Capture le désengagement progressif avant le churn effectif. |
+| `days_since_last_usage` | Usage | Mesure l'inactivité immédiate (signal d'alerte critique). |
+| `critical_ratio` | Support | Identifie les comptes en situation de tension technique majeure. |
+| `nb_unique_features` | Usage | Mesure l'adoption du produit (stickiness). |
+| `seniority_months` | Sub | Distingue le churn précoce (onboarding raté) du churn mature. |
+| `nb_upgrades` | Sub | Indique la satisfaction et la croissance du compte (anti-churn). |
+
+### 2.4 Retour d'expérience sur l'Agent de Traitement
+L'agent `data-engineer` a été configuré pour automatiser ces tâches. 
+- **Points forts** : Excellente gestion des types temporels et des chemins relatifs. 
+- **Ajustements nécessaires** : L'agent a dû être explicitement instruit d'ignorer le `churn_flag` d'origine, qu'il avait tendance à conserver par défaut. La séparation en trois scripts (`clean`, `build`, `analytics`) a permis une meilleure traçabilité.
 
 ---
 ### 2.3 Tâche de recherche : Théorie du Feature Engineering

@@ -2,10 +2,12 @@ import pandas as pd
 import numpy as np
 import os
 
-# Configuration
-RAW_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/raw/"
-CLEANED_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/processed/cleaned/"
-FEATURES_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/processed/features/"
+# Configuration (Abstractions relatives)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_DIR = os.path.join(BASE_DIR, "data", "raw")
+PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
+CLEANED_DIR = os.path.join(PROCESSED_DIR, "cleaned")
+FEATURES_DIR = os.path.join(PROCESSED_DIR, "features")
 
 if not os.path.exists(FEATURES_DIR):
     os.makedirs(FEATURES_DIR)

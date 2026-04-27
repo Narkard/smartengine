@@ -3,30 +3,31 @@
 ## Contexte
 Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B.
 
-## Résumé du Sprint 1
-- **Infrastucture** : Dépôt GitHub configuré, arborescence complète, GEMINI.md initialisé.
-- **Analyse** : Brief client reformulé, veille technique (Scikit-learn, Streamlit, etc.).
-- **Exploration** : Première analyse du dataset RavenStack (5 CSV).
-- **Livrables** : Dossier de conception (Cadrage), Rapport de veille, Backlog.
+## Historique des Sprints
+### Sprint 1 : Infrastructure & Cadrage
+- **Action** : Configuration du dépôt, analyse du brief client, veille technologique.
+- **Livrables** : Dossier de conception (Section 1), Rapport de veille, Backlog initial.
+
+### Sprint 2 : Traitement des données (Terminé)
+- **Action** : Nettoyage complet, Feature Engineering et génération de la table analytique.
+- **Innovation** : Recalcul de la cible via `churn_events` pour pallier le manque de fiabilité du flag d'origine.
+- **Livrables** :
+    - `data/processed/analytics.csv` (Table finale)
+    - `outputs/rapport-nettoyage.md` (Traçabilité)
+    - `.gemini/agents/data-engineer.md` (Agent spécialisé)
+    - Dossier de conception (Section 2 mise à jour)
 
 ## Sprint en cours
-**Sprint 2 - Traitement des données**
-- Objectif : Produire la table analytique `data/processed/analytics.csv`.
-- Scripts : `src/clean_data.py`, `src/build_features.py`, `src/build_analytics.py`.
-
-## Rôles (Sprint 1)
-- **Scrum Master** : Léo
-- **Product Owner** : Quentin
-- **Développeurs IA** : Joanne, Maé, Sophie
+**Sprint 3 - Modélisation & Évaluation** (À venir)
+- Objectif : Entraîner le modèle de prédiction et valider ses performances.
 
 ## Rôles du Sprint 2
 - **Scrum Master** : Maé
 - **Product Owner** : Joanne
 - **Développeurs IA** : Léo, Quentin, Sophie
 
-## Conventions
-- Scripts Python -> `/src/`
-- Rapports -> `/outputs/`
-- Table analytique -> `data/processed/analytics.csv`
-- Ne jamais modifier `/data/raw/`
-- Tous les rapports sont en français
+## Conventions et Accès
+- **Données** : Les fichiers bruts sont dans `/data/raw/` (lecture seule).
+- **Pipeline** : L'exécution se fait via `src/clean_data.py` -> `src/build_features.py` -> `src/build_analytics.py`.
+- **Rapports** : `/outputs/` pour les résultats opérationnels, `/docs/` pour la documentation stratégique.
+- **Table analytique** : `data/processed/analytics.csv` (28 variables, 500 comptes).

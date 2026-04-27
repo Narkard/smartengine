@@ -2,9 +2,11 @@ import pandas as pd
 import numpy as np
 import os
 
-# Configuration des chemins
-RAW_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/raw/"
-CLEANED_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/processed/cleaned/"
+# Configuration des chemins (Abstractions relatives)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RAW_DIR = os.path.join(BASE_DIR, "data", "raw")
+PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
+CLEANED_DIR = os.path.join(PROCESSED_DIR, "cleaned")
 
 if not os.path.exists(CLEANED_DIR):
     os.makedirs(CLEANED_DIR)
@@ -18,6 +20,13 @@ def clean_data():
     usage = pd.read_csv(os.path.join(RAW_DIR, "ravenstack_feature_usage.csv"))
     support = pd.read_csv(os.path.join(RAW_DIR, "ravenstack_support_tickets.csv"))
     churn = pd.read_csv(os.path.join(RAW_DIR, "ravenstack_churn_events.csv"))
+
+    # Exclusion explicite de churn_flag (source jugée non fiable)
+    print("Action : Exclusion de churn_flag des sources initiales...")
+    if 'churn_flag' in acc.columns:
+        acc = acc.drop(columns=['churn_flag'])
+    if 'churn_flag' in sub.columns:
+        sub = sub.drop(columns=['churn_flag'])
 
     # 2. Traitement des Types Incorrects (Dates)
     print("Action : Conversion des colonnes temporelles...")

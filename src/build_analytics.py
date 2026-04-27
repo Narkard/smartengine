@@ -1,9 +1,12 @@
 import pandas as pd
 import os
 
-CLEANED_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/processed/cleaned/"
-FEATURES_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/processed/features/"
-FINAL_DIR = "C:/Users/leola/Desktop/Projet smartEngine/data/processed/"
+# Configuration (Abstractions relatives)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROCESSED_DIR = os.path.join(BASE_DIR, "data", "processed")
+CLEANED_DIR = os.path.join(PROCESSED_DIR, "cleaned")
+FEATURES_DIR = os.path.join(PROCESSED_DIR, "features")
+FINAL_DIR = PROCESSED_DIR
 
 def build_analytics():
     print("--- Assemblage de la Table Analytique (analytics.csv) ---")
@@ -22,9 +25,13 @@ def build_analytics():
     analytics = analytics.merge(usage_agg, on='account_id', how='left')
     analytics = analytics.merge(support_agg, on='account_id', how='left')
     
-    # 4. Traitement de la variable cible (churn_flag)
-    # On s'assure qu'elle est binaire (0 ou 1)
-    analytics['churn_flag'] = analytics['churn_flag'].astype(int)
+    # 4. Traitement de la variable cible (Recalculée via churn_events)
+    # Justification : churnflag est jugé peu fiable (erreurs de saisie, délais de mise à jour).
+    # churn_events est la source de vérité pour les résiliations réelles.
+    print("Action : Recalcul de la cible via churn_events...")
+    churn_events = pd.read_csv(os.path.join(CLEANED_DIR, "churn_cleaned.csv"))
+    churned_accounts = churn_events['account_id'].unique()
+    analytics['churn_flag'] = analytics['account_id'].isin(churned_accounts).astype(int)
     
     # 5. Encodage des dernières variables catégorielles
     analytics = pd.get_dummies(analytics, columns=['industry', 'plan_tier'], prefix=['ind', 'plan'])
