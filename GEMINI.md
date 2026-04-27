@@ -15,11 +15,18 @@ Nous construisons **smartEngine**, un système de prédiction de churn pour Rave
     - `data/processed/analytics.csv` (Table finale)
     - `outputs/rapport-nettoyage.md` (Traçabilité)
     - `.gemini/agents/data-engineer.md` (Agent spécialisé)
-    - Dossier de conception (Section 2 mise à jour)
+
+### Sprint 3 : Modélisation & Évaluation (Terminé)
+- **Action** : Entraînement de LogisticRegression, RandomForest et XGBoost avec gestion du déséquilibre des classes.
+- **Résultat** : Meilleur modèle identifié : **RandomForest** (F1-score : **0.81**).
+- **Livrables** :
+    - `src/train_model.py` (Script d'entraînement)
+    - `outputs/models/churn_model.joblib` (Modèle sauvegardé)
+    - `.gemini/agents/model-trainer.md` (Agent spécialisé)
 
 ## Sprint en cours
-**Sprint 3 - Modélisation & Évaluation** (À venir)
-- Objectif : Entraîner le modèle de prédiction et valider ses performances.
+**Sprint 4 - Déploiement & Dashboarding** (À venir)
+- Objectif : Créer une interface de visualisation et une API de prédiction.
 
 ## Rôles du Sprint 2
 - **Scrum Master** : Maé
