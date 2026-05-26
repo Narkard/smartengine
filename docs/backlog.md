@@ -1,6 +1,6 @@
-# Backlog Sprint 2 - smartEngine
+# Backlog - smartEngine
 
-Ce backlog répertorie les User Stories (US) pour le second sprint du projet.
+Ce backlog répertorie les User Stories (US) pour l'ensemble des sprints du projet.
 
 ## User Stories du Sprint 1 (TERMINÉES)
 
@@ -14,7 +14,7 @@ Ce backlog répertorie les User Stories (US) pour le second sprint du projet.
 | US6 | Scrum Master | Synthétiser la fiche collective | Avoir une vision commune du dataset | ✅ Done | Quentin |
 | US7 | Product Owner | Rédiger le cadrage du dossier de conception | Fixer les limites techniques et éthiques | ✅ Done | Quentin |
 
-## User Stories du Sprint 2 (EN COURS)
+## User Stories du Sprint 2 (TERMINÉES)
 
 | ID | En tant que... | Je veux... | Afin de... | État | Responsable |
 |:---|:---|:---|:---|:---|:---|
@@ -24,7 +24,27 @@ Ce backlog répertorie les User Stories (US) pour le second sprint du projet.
 | US11 | Data Scientist | Créer des variables de tendance (usage_trend) | Capturer les signaux de désengagement | ✅ Done | Quentin |
 | US12 | Data Analyst | Encoder les variables catégorielles | Assurer la compatibilité avec les algorithmes ML | ✅ Done | Quentin |
 
-## Critères d'Acceptation (Sprint 2)
-- Fichier `data/processed/analytics.csv` généré.
-- Rapport `outputs/rapport-nettoyage.md` complet.
-- Scripts `src/clean_data.py`, `src/build_features.py`, `src/build_analytics.py` présents.
+## User Stories du Sprint 3 (TERMINÉES)
+
+| ID | En tant que... | Je veux... | Afin de... | État | Responsable |
+|:---|:---|:---|:---|:---|:---|
+| US13 | Scrum Master | Rédiger la section 3 du dossier de conception | Documenter les choix de modélisation (RandomForest) | ✅ Done | Léo |
+| US14 | Data Scientist | Entraîner un modèle prédictif | Prédire le risque de churn pour chaque compte | ✅ Done | Sophie |
+| US15 | Développeur IA | Évaluer les performances du modèle | Vérifier qu'il atteint la précision attendue (76%) | ✅ Done | Maé |
+| US16 | Product Owner | Valider les métriques du modèle | S'assurer que le modèle répond au besoin métier | ✅ Done | Joanne |
+
+## User Stories du Sprint 4 (EN COURS)
+
+| ID | En tant que... | Je veux... | Afin de... | État | Responsable |
+|:---|:---|:---|:---|:---|:---|
+| US17 | Product Owner | Valider le dashboard interactif Streamlit | Permettre aux équipes CS de piloter la rétention | 🚧 In Progress | Joanne |
+| US18 | Développeur IA | Développer le dashboard avec Streamlit | Visualiser les KPI et comptes à risque | ✅ Done | Léo |
+| US19 | Développeur IA | Créer le script de génération d'alertes | Identifier les comptes dont le risque dépasse 60% | ✅ Done | Sophie |
+| US20 | Scrum Master | Rédiger la section 4 du dossier de conception | Justifier les choix de déploiement et de data storytelling | 🚧 In Progress | Maé |
+| US21 | Product Owner | Créer le guide d'utilisation du Sprint 4 | Faciliter la prise en main des outils du Sprint 4 | ✅ Done | Joanne |
+
+## Critères d'Acceptation (Sprint 4)
+- Dashboard `src/dashboard.py` développé et testé.
+- Script d'alertes `src/generate_alerts.py` fonctionnel et générant des rapports.
+- Section 4 du dossier de conception complétée.
+- Fichier `docs/guide-antigravity-sprint4.md` rédigé.

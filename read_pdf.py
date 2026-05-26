@@ -5,7 +5,7 @@ except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "pymupdf", "--quiet"])
     import fitz
 
-doc = fitz.open("smartengine_kit1_sprint1.pdf")
+doc = fitz.open("smartengine_kit2_sprint2.pdf")
 text = ""
 for page in doc:
     text += page.get_text() + "\n"
