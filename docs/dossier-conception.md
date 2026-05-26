@@ -103,7 +103,14 @@ Nous avons défini trois segments d'action pour l'équipe Customer Success :
 **Logique de Rentabilité** : Les seuils ont été calibrés pour maximiser le Recall sur le segment High. Le coût opérationnel d'intervention est concentré là où la probabilité de sauvetage est la plus forte, optimisant ainsi le ROI du service CS.
 
 ## 4. Déploiement (Sprint 4)
-### 4.1 Dashboard
+### 4.1 Segmentation risque / valeur
+
+- **Définition du MRR et de la CLV** : Le MRR (*Monthly Recurring Revenue*) représente le revenu mensuel récurrent généré par un abonnement. La CLV (*Customer Lifetime Value*) estime le profit total qu'un client apportera tout au long de sa relation avec RavenStack.
+- **Justification du choix de la médiane du MRR comme seuil** : Nous avons opté pour la médiane plutôt que la moyenne pour séparer la "haute valeur" de la "faible valeur" car la médiane est robuste face aux valeurs extrêmes (outliers). Cela évite qu'une poignée de très gros comptes ne fausse le seuil de segmentation.
+- **Pourquoi la matrice risque/valeur plutôt que K-Means** : Une matrice déterministe à 4 quadrants offre une lisibilité immédiate pour les équipes Customer Success (CS). Le K-Means, en tant qu'algorithme de clustering non supervisé, produit des groupes qui peuvent manquer de sens métier direct et dont les frontières bougent à chaque réentraînement. La matrice garantit des règles stables et actionnables.
+- **Lien avec l'article 22 du RGPD (humain dans la boucle)** : L'article 22 du RGPD protège les personnes contre les décisions fondées *exclusivement* sur un traitement automatisé ayant des effets significatifs. Ici, le modèle se contente de recommander une priorisation. Un humain (le Customer Success Manager) reste systématiquement dans la boucle pour analyser le contexte du compte et valider l'action finale, garantissant ainsi la conformité réglementaire.
+
+### 4.2 Dashboard Streamlit
 Développement d'une interface **Streamlit** permettant :
 - Visualisation des KPIs (MRR, Taux de Churn).
 - Analyse de la corrélation Usage/Revenu.
