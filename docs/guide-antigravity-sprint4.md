@@ -56,15 +56,37 @@
 
 **Livrable :** `src/dashboard.py` + `requirements.txt`
 
-### Ordre des étapes
+---
 
-**Étape 1 — Attendre que Quentin ait pushé `priorisation.csv`**
-> Le dashboard se nourrit de ce fichier. Se coordonner avec Quentin en premier.
+### Étape 1 — 🔄 Action manuelle : récupérer le travail de Quentin
 
-**Étape 2 — Créer l'agent de déploiement avec Maé** *(optionnel mais recommandé)*
-> Si Maé crée l'agent avant toi, utilise-le directement.
+Attendre que Quentin ait pushé `outputs/priorisation.csv` (le dashboard dépend de ce fichier).
+Une fois qu'il a pushé, récupère son travail :
 
-**Étape 3 — Prompt à donner à Antigravity pour le dashboard**
+```
+git pull origin main
+```
+
+Vérifie que le fichier est bien là :
+```
+ls outputs/priorisation.csv
+```
+
+---
+
+### Étape 2 — 🤖 Prompt Antigravity : installer les dépendances
+
+```
+Vérifie que les librairies suivantes sont listées dans src/requirements.txt
+(crée le fichier s'il n'existe pas) :
+streamlit, pandas, plotly, shap, joblib, scikit-learn, matplotlib
+
+Ensuite installe-les avec : pip install -r src/requirements.txt
+```
+
+---
+
+### Étape 3 — 🤖 Prompt Antigravity : générer le dashboard
 
 ```
 En te basant sur les fichiers outputs/scores.csv et outputs/priorisation.csv,
@@ -81,40 +103,98 @@ Vue 2 — Priorisation :
 - Colonnes affichées : account_id, churn_score, risk_level, MRR, quadrant, action_recommandee
 
 Vue 3 — Fiche compte :
-- Sélecteur de compte (dropdown)
-- Affiche le profil complet du compte
-- Jauge visuelle du score de churn
-- Quadrant et action recommandée mis en évidence
-- Graphique SHAP en barres horizontales (charger churn_model.joblib et calculer les valeurs SHAP)
+- Sélecteur de compte (dropdown sur account_id)
+- Affiche le profil complet du compte (plan, ancienneté, usage, tickets)
+- Jauge visuelle du score de churn (présentée de façon non technique)
+- Quadrant et action recommandée mis en évidence avec une icône
+- Graphique SHAP en barres horizontales :
+  charger outputs/models/churn_model.joblib,
+  calculer les valeurs SHAP pour ce compte,
+  afficher les 5 facteurs qui augmentent ou diminuent son score
 
 Contraintes :
-- Palette de couleurs accessible aux daltoniens (pas de rouge/vert pur, utiliser orange/bleu)
-- Libellés sur tous les graphiques, pas uniquement la couleur pour différencier
-- Le dashboard doit fonctionner avec : streamlit run src/dashboard.py
-- Mettre à jour requirements.txt avec toutes les dépendances
+- Palette de couleurs accessible aux daltoniens (orange/bleu, pas rouge/vert pur)
+- Libellés texte sur tous les graphiques en plus de la couleur
+- Exécutable avec : streamlit run src/dashboard.py
+- Aucune dépendance à Gemini CLI
 ```
 
-**Étape 4 — Tester le dashboard**
+---
+
+### Étape 4 — 🔄 Action manuelle : tester le dashboard localement
+
+Lance le dashboard dans le terminal :
 ```
-pip install -r src/requirements.txt
 streamlit run src/dashboard.py
 ```
 
-**Étape 5 — Push**
+Vérifier que :
+- [ ] La Vue 1 (Portefeuille) s'affiche avec les KPIs et les graphiques
+- [ ] La Vue 2 (Priorisation) : les filtres fonctionnent, le scatter plot est interactif
+- [ ] La Vue 3 (Fiche compte) : le dropdown permet de choisir un compte, le graphique SHAP s'affiche
+
+---
+
+### Étape 5 — 🤖 Prompt Antigravity (si bug) : corriger les erreurs
+
+Si une erreur apparaît au lancement, copie-colle le message d'erreur dans Antigravity :
+```
+Le dashboard src/dashboard.py produit l'erreur suivante au lancement :
+[coller ici le message d'erreur exact]
+Identifie la cause et corrige le fichier.
+```
+
+---
+
+### Étape 6 — 🔄 Action manuelle : push du dashboard
+
 ```
 git add src/dashboard.py src/requirements.txt
 git commit -m "feat: dashboard Streamlit Sprint 4 (3 vues + SHAP)"
 git push origin main
 ```
 
-**Étape 6 — Rédiger ta partie du dossier de conception**
+---
 
-Prompt Antigravity :
+### Étape 7 — 🤖 Prompt Antigravity : tâche de recherche
+
 ```
-Rédige la sous-section "Dashboard" de la section 4 du dossier de conception
-docs/dossier-conception.md. Couvre : choix des visualisations et pourquoi,
-organisation des 3 vues, gestion de l'accessibilité WCAG et daltonisme,
-retour d'expérience Streamlit, comment l'agent a été utilisé pour générer le code.
+Dans le cadre du Sprint 4 du projet smartEngine, rédige une synthèse de recherche
+à ajouter dans docs/dossier-conception.md (section 4.2 Dashboard). Documente :
+
+1. Qu'est-ce que le data storytelling ? Comment structurer un dashboard pour
+   raconter une histoire avec les données ? Quels sont les principes clés ?
+
+2. Quels sont les principes d'accessibilité visuelle WCAG à respecter dans
+   un dashboard ? Comment gérer le daltonisme dans les choix de couleurs ?
+   Donne des exemples concrets (palettes, alternatives textuelles).
+
+3. Comment présenter un score de probabilité (ex: 0.82 de churn) à un public
+   non technique sans créer de fausses certitudes ? Quelles formulations utiliser ?
+```
+
+---
+
+### Étape 8 — 🤖 Prompt Antigravity : rédiger la sous-section du dossier de conception
+
+```
+Rédige et ajoute la sous-section "4.2 Dashboard Streamlit" dans
+docs/dossier-conception.md. Couvre :
+- Choix des visualisations et justification (pourquoi scatter plot, pourquoi SHAP)
+- Organisation narrative des 3 vues (portefeuille → priorisation → fiche compte)
+- Gestion de l'accessibilité WCAG et du daltonisme (choix de palette, libellés)
+- Retour d'expérience Streamlit (avantages, limites rencontrées)
+- Comment l'agent de déploiement a été utilisé pour générer le code
+```
+
+---
+
+### Étape 9 — 🔄 Action manuelle : push du dossier de conception
+
+```
+git add docs/dossier-conception.md
+git commit -m "docs: section 4.2 dashboard - dossier de conception Sprint 4"
+git push origin main
 ```
 
 ---
