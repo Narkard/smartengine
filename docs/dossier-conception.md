@@ -126,5 +126,13 @@ Développement d'une interface **Streamlit** conçue spécifiquement pour les é
 - **Présentation d'un score à un public non technique** : Les probabilités brutes (ex: 0.81) sont traduites en catégories explicites ("Risque Élevé", "Priorité Absolue"). Le vocabulaire mathématique est masqué au profit de termes d'action et d'indicateurs colorés simples.
 - **Utilisation de l'agent de déploiement** : L'agent de déploiement a été spécifiquement sollicité pour préparer l'environnement d'exécution du dashboard et s'assurer de sa robustesse, validant ainsi l'autonomie du code en dehors de l'interface Gemini CLI.
 
-*Dernière mise à jour : 29 mars 2026*
+### 4.3 Recommandations et mesure d'impact
+
+- **Méthode de calcul du ROI estimé** : Le Retour sur Investissement (ROI) a été évalué en isolant le revenu du quadrant Q1 (Urgence absolue). En appliquant une hypothèse de rétention de 40 % grâce à des actions ciblées, nous avons calculé le MRR mensuel sauvé, permettant de justifier économiquement l'allocation de temps des équipes CS sur ces comptes précis.
+- **Protocole de mesure d'impact** : Pour valider scientifiquement l'apport du modèle, un test A/B sera mis en place sur le trimestre prochain. Les clients identifiés à risque (Q1) seront scindés en deux groupes : un groupe de traitement (80 %) qui bénéficiera de la nouvelle approche proactive, et un groupe témoin (20 %) avec le suivi standard. L'*uplift* de rétention (la différence de taux de churn entre les deux groupes) permettra de mesurer la véritable plus-value du dispositif.
+- **Conduite du changement (freins et solutions)** :
+  - *Surcharge de travail perçue* : Pour éviter que les CSM se sentent submergés par les alertes, le déploiement se fera via une phase pilote de 4 semaines, permettant d'ajuster le volume d'appels à la bande passante réelle.
+  - *Défiance envers la "boîte noire"* : Pour rassurer les équipes sur le bien-fondé des prédictions, le score global est systématiquement accompagné de son explication locale (graphes SHAP). Le CSM n'appelle pas un client "parce que l'IA l'a dit", mais "parce que son usage a chuté de 30% et qu'il a 3 tickets critiques".
+
+*Dernière mise à jour : 26 mai 2026*
 
