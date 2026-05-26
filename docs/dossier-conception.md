@@ -134,5 +134,23 @@ Développement d'une interface **Streamlit** conçue spécifiquement pour les é
   - *Surcharge de travail perçue* : Pour éviter que les CSM se sentent submergés par les alertes, le déploiement se fera via une phase pilote de 4 semaines, permettant d'ajuster le volume d'appels à la bande passante réelle.
   - *Défiance envers la "boîte noire"* : Pour rassurer les équipes sur le bien-fondé des prédictions, le score global est systématiquement accompagné de son explication locale (graphes SHAP). Le CSM n'appelle pas un client "parce que l'IA l'a dit", mais "parce que son usage a chuté de 30% et qu'il a 3 tickets critiques".
 
+### 4.4 Retour d'expérience sur les agents IA
+
+Sur l'ensemble des 4 sprints, le projet s'est appuyé sur l'orchestration de 4 agents spécialisés via Gemini CLI :
+- **L'agent Data Engineer** : Excellent pour l'automatisation du traitement des dates et l'écriture des scripts de nettoyage (`clean_data.py`). *Limite* : Tendance à conserver toutes les données d'origine par sécurité, nécessitant des instructions explicites (intervention manuelle) pour écarter l'ancien flag de churn afin d'éviter la fuite de données.
+- **L'agent Model Trainer** : Très performant pour itérer sur la modélisation et la gestion des classes déséquilibrées (`class_weight`). *Limite* : Nécessite un recadrage humain continu sur les priorités d'évaluation (l'optimisation du Recall a dû être explicitement forcée par l'équipe).
+- **L'agent Data Processor / Analyst** : A grandement accéléré la construction de la table analytique (jointures) et la préparation des données de scoring.
+- **L'agent de Déploiement** : Très utile lors de l'ultime sprint pour s'assurer que l'application et les scripts fonctionnent en totale autonomie, et pour valider l'environnement d'exécution de Streamlit.
+- **Bilan global** : L'approche multi-agents accélère considérablement l'écriture de code et la configuration technique. Toutefois, l'expertise métier humaine demeure la véritable valeur ajoutée du projet, tant pour définir les règles de gestion (seuils, gestion du RGPD) que pour donner du sens aux résultats de ces agents.
+
+### 4.5 Limites et perspectives du modèle
+
+Bien que le modèle Random Forest remplisse l'objectif initial, il ne reflète encore qu'une vision partielle de la situation client.
+- **Ce que le modèle ne capture pas (Angles morts)** : Le système actuel est purement quantitatif. Il ignore la donnée non-structurée comme le contenu sémantique des tickets de support (la "colère" d'un client dans son ticket) ou la qualité des échanges avec le commercial. Il n'analyse pas non plus l'impact de la temporalité longue (érosion de l'engagement sur 6 mois, au-delà des indicateurs à 30 jours).
+- **Améliorations possibles (V2)** :
+  1. *Analyse de sentiment (NLP)* : Exploiter le contenu textuel des tickets de support pour ajouter une dimension "humeur" à notre base d'apprentissage.
+  2. *Croisement CRM* : Intégrer les données qualitatives issues de Salesforce/HubSpot pour analyser l'engagement relationnel (nombre de réunions refusées, temps de réponse aux emails).
+  3. *Modèles segmentés* : Entraîner des modèles distincts par strate de clientèle (ex: modèle Enterprise vs modèle Starter), les comportements de churn étant très différents selon la taille de l'entreprise.
+
 *Dernière mise à jour : 26 mai 2026*
 
