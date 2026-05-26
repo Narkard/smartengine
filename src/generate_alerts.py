@@ -21,20 +21,26 @@ def generate_alerts():
     df = pd.read_csv(DATA_PATH)
     
     # 2. Filtrer les clients qui n'ont pas encore churné (actifs)
-    # Dans notre dataset, churn_flag est la cible historique. 
-    # Pour simuler des alertes, on prédit sur tout le monde ou on imagine que ce sont des données fraîches.
-    df_active = df[df['churn_flag'] == False].copy()
+    df_active = df[df['target_churn'] == False].copy()
     
     if len(df_active) == 0:
         print("⚠️ Aucun client actif trouvé pour la prédiction.")
         return
 
     # 3. Préparation des données pour le modèle
-    exclude = ['account_id', 'account_name', 'signup_date', 'country', 'referral_source', 'churn_flag']
+    exclude = ['account_id', 'account_name', 'signup_date', 'country', 'referral_source', 'target_churn']
+    
+    df_active.rename(columns={
+        'usage_count_avg': 'usage_count_sum',
+        'error_count': 'error_count_sum'
+    }, inplace=True)
+    
     X_predict = df_active.drop(columns=[c for c in exclude if c in df_active.columns])
     
+    if hasattr(model, 'feature_names_in_'):
+        X_predict = X_predict[model.feature_names_in_]
+    
     # 4. Prédiction des probabilités
-    # GradientBoosting a une méthode predict_proba
     probs = model.predict_proba(X_predict)[:, 1]
     df_active['churn_probability'] = probs
     
@@ -59,9 +65,8 @@ def generate_alerts():
         line = f"ID: {row['account_id']} | Risque: {risk_pct}% | MRR: {row.get('mrr_amount', 0)}$"
         report_lines.append(line)
         
-        # Diagnostics simples basés sur les features importantes
-        if row.get('error_count_mean', 0) > df['error_count_mean'].mean():
-            report_lines.append(f"  -> SIGNAL: Taux d'erreurs élevé ({round(row['error_count_mean'], 2)})")
+        if row.get('error_count_sum', 0) > 5:
+            report_lines.append(f"  -> SIGNAL: Taux d'erreurs élevé ({round(row.get('error_count_sum', 0), 2)})")
         if row.get('ticket_count', 0) > 2:
             report_lines.append(f"  -> SIGNAL: Volume de tickets important ({int(row['ticket_count'])})")
         report_lines.append("")
@@ -73,7 +78,8 @@ def generate_alerts():
         f.write("\n".join(report_lines))
         
     print(f"✅ Rapport d'alertes généré : {OUTPUT_REPORT}")
-    print(f"📈 Top risque : {high_risk['account_id'].iloc[0]} avec {round(high_risk['churn_probability'].iloc[0]*100, 1)}%")
+    if len(high_risk) > 0:
+        print(f"📈 Top risque : {high_risk['account_id'].iloc[0]} avec {round(high_risk['churn_probability'].iloc[0]*100, 1)}%")
 
 if __name__ == "__main__":
     generate_alerts()
