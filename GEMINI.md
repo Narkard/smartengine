@@ -1,32 +1,27 @@
 # Projet smartEngine - Groupe 1
 
 ## Contexte
-Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B.
+Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B. Les données brutes sont dans `/data/raw/`.
 
-## Résumé du Sprint 1
-- **Infrastucture** : Dépôt GitHub configuré, arborescence complète, GEMINI.md initialisé.
-- **Analyse** : Brief client reformulé, veille technique (Scikit-learn, Streamlit, etc.).
-- **Exploration** : Première analyse du dataset RavenStack (5 CSV).
-- **Livrables** : Dossier de conception (Cadrage), Rapport de veille, Backlog.
+## Résumé des Sprints précédents
+- **Sprint 1 (Découverte)** : Dépôt GitHub configuré, arborescence complète, GEMINI.md initialisé. Exploration des 5 CSV bruts, veille technique et cadrage (Dossier de conception).
+- **Sprint 2 (Traitement)** : Nettoyage des données, gestion des valeurs manquantes, feature engineering, et production de la table analytique `data/processed/analytics.csv`.
+- **Sprint 3 (Modélisation)** : Entraînement du modèle de scoring prédictif (RandomForest) avec une précision de 76% et validation des métriques.
 
 ## Sprint en cours
-**Sprint 2 - Traitement des données**
-- Objectif : Produire la table analytique `data/processed/analytics.csv`.
-- Scripts : `src/clean_data.py`, `src/build_features.py`, `src/build_analytics.py`.
+**Sprint 4 - Déploiement et soutenance**
+- Objectifs : Déployer le dashboard interactif, automatiser les alertes, générer le fichier de priorisation des clients à risque et finaliser le dossier de conception.
+- Tâches actuelles : Mise à jour de l'infrastructure, création de l'agent de déploiement, script `generate_priorisation.py`.
 
-## Rôles (Sprint 1)
-- **Scrum Master** : Léo
-- **Product Owner** : Quentin
-- **Développeurs IA** : Joanne, Maé, Sophie
-
-## Rôles du Sprint 2
-- **Scrum Master** : Maé
-- **Product Owner** : Joanne
-- **Développeurs IA** : Léo, Quentin, Sophie
+## Rôles du Sprint 4
+- **Scrum Master** : Joanne
+- **Développeurs IA** : Maé, Quentin, Léo, Sophie
+- *(Product Owner en rotation selon l'équipe)*
 
 ## Conventions
 - Scripts Python -> `/src/`
-- Rapports -> `/outputs/`
-- Table analytique -> `data/processed/analytics.csv`
+- Rapports et datasets générés -> `/outputs/`
+- Table analytique consolidée -> `data/processed/analytics.csv`
+- Agents IA -> `.gemini/agents/`
 - Ne jamais modifier `/data/raw/`
-- Tous les rapports sont en français
+- Tous les rapports sont rédigés en français.
