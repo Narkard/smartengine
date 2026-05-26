@@ -1,45 +1,27 @@
 # Projet smartEngine - Groupe 1
 
 ## Contexte
-Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B.
+Nous construisons **smartEngine**, un système de prédiction de churn pour RavenStack, un SaaS B2B. Les données brutes sont dans `/data/raw/`.
 
-## Historique des Sprints
-### Sprint 1 : Infrastructure & Cadrage (Terminé)
-- **Action** : Configuration du dépôt, analyse du brief client, veille technologique.
-- **Livrables** : Dossier de conception (Section 1), Rapport de veille, Backlog initial.
+## Résumé des Sprints précédents
+- **Sprint 1 (Découverte)** : Dépôt GitHub configuré, arborescence complète, GEMINI.md initialisé. Exploration des 5 CSV bruts, veille technique et cadrage (Dossier de conception).
+- **Sprint 2 (Traitement)** : Nettoyage des données, gestion des valeurs manquantes, feature engineering, et production de la table analytique `data/processed/analytics.csv`.
+- **Sprint 3 (Modélisation)** : Entraînement du modèle de scoring prédictif (RandomForest) avec une précision de 76% et validation des métriques.
 
-### Sprint 2 : Traitement des données (Terminé)
-- **Action** : Nettoyage complet, Feature Engineering et génération de la table analytique.
-- **Innovation** : Recalcul de la cible via `churn_events` pour pallier le manque de fiabilité du flag d'origine.
-- **Livrables** :
-    - `data/processed/analytics.csv` (Table finale)
-    - `outputs/rapport-nettoyage.md` (Traçabilité)
+## Sprint en cours
+**Sprint 4 - Déploiement et soutenance**
+- Objectifs : Déployer le dashboard interactif, automatiser les alertes, générer le fichier de priorisation des clients à risque et finaliser le dossier de conception.
+- Tâches actuelles : Mise à jour de l'infrastructure, création de l'agent de déploiement, script `generate_priorisation.py`.
 
-### Sprint 3 : Modélisation & Évaluation (Terminé)
-- **Action** : Entraînement de LogisticRegression, RandomForest et XGBoost.
-- **Résultat** : Meilleur modèle identifié : **RandomForest** (F1-score : **0.81**).
-- **Livrables** :
-    - `src/train_model.py` (Entraînement)
-    - `src/evaluate_model.py` (Évaluation)
-    - `src/generate_scores.py` (Scoring)
-    - `outputs/models/churn_model.joblib` (Modèle)
-    - `outputs/scores.csv` (Scores et risques)
-    - `outputs/evaluation_metrics.json` (Métriques)
-    - `outputs/rapport-modele.md` (Rapport)
-
-## Rôles Sprint 3
-- **Scrum Master** : Quentin
-- **Product Owner** : Maé
-- **Développeurs IA** : Léo, Joanne, Sophie
+## Rôles du Sprint 4
+- **Scrum Master** : Joanne
+- **Développeurs IA** : Maé, Quentin, Léo, Sophie
+- *(Product Owner en rotation selon l'équipe)*
 
 ## Conventions
 - Scripts Python -> `/src/`
-- Rapports -> `/outputs/`
-- Données transformées -> `/data/processed/analytics.csv`
-- Modèles -> `outputs/models/churn_model.joblib`
-- Scores -> `outputs/scores.csv`
+- Rapports et datasets générés -> `/outputs/`
+- Table analytique consolidée -> `data/processed/analytics.csv`
+- Agents IA -> `.gemini/agents/`
 - Ne jamais modifier `/data/raw/`
-- Tous les rapports sont en français
-
-## Sprint en cours
-Sprint 3 - Modélisation (Finalisation)
+- Tous les rapports sont rédigés en français.
