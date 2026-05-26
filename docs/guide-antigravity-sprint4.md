@@ -4,19 +4,48 @@
 
 ---
 
-## 📂 Avant tout — Setup commun
+## 🔽 Étape 0 — Cloner le dépôt (à faire une seule fois)
+
+> ⚠️ **Si tu n'as pas encore le projet sur ta machine**, commence par cloner le dépôt GitHub avant tout.
+
+1. Ouvre un terminal et place-toi dans le dossier où tu veux mettre le projet :
+   ```
+   cd C:\Users\<ton-nom>\Desktop
+   ```
+2. Clone le dépôt :
+   ```
+   git clone https://github.com/Narkard/smartengine.git
+   ```
+3. Entre dans le dossier cloné :
+   ```
+   cd smartengine
+   ```
+4. Vérifie que tout est bien récupéré :
+   ```
+   git log --oneline -5
+   ```
+
+> ✅ Tu n'as à faire cette étape **qu'une seule fois**. Pour les jours suivants, tu fais juste un `git pull`.
+
+---
+
+## 📂 Avant tout — Setup commun (chaque jour)
 
 **Chaque membre de l'équipe doit :**
 
 1. Ouvrir un terminal dans le dossier du projet :
    ```
-   cd "C:\Users\leola\Desktop\Projet smartEngine"
+   cd "C:\Users\<ton-nom>\Desktop\smartengine"
    ```
-2. Lancer Antigravity CLI :
+2. Récupérer les dernières modifications de l'équipe :
+   ```
+   git pull origin main
+   ```
+3. Lancer Antigravity CLI :
    ```
    antigravity
    ```
-3. Vérifier qu'on est bien sur `main` et à jour :
+4. Vérifier qu'on est bien sur `main` et à jour :
    ```
    git pull origin main
    ```
