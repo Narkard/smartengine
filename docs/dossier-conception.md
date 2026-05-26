@@ -111,10 +111,20 @@ Nous avons défini trois segments d'action pour l'équipe Customer Success :
 - **Lien avec l'article 22 du RGPD (humain dans la boucle)** : L'article 22 du RGPD protège les personnes contre les décisions fondées *exclusivement* sur un traitement automatisé ayant des effets significatifs. Ici, le modèle se contente de recommander une priorisation. Un humain (le Customer Success Manager) reste systématiquement dans la boucle pour analyser le contexte du compte et valider l'action finale, garantissant ainsi la conformité réglementaire.
 
 ### 4.2 Dashboard Streamlit
-Développement d'une interface **Streamlit** permettant :
-- Visualisation des KPIs (MRR, Taux de Churn).
-- Analyse de la corrélation Usage/Revenu.
-- Tableau d'alertes dynamique pour les équipes Customer Success.
+
+Développement d'une interface **Streamlit** conçue spécifiquement pour les équipes Customer Success (CS) :
+
+- **Choix des visualisations** : 
+  - **Jauges** : Utilisées pour présenter les KPIs (MRR global en risque) de manière lisible et impactante.
+  - **Scatter plot** : Idéal pour cartographier la matrice risque/valeur et repérer en un coup d'œil les comptes du quadrant Q1 (Urgence absolue).
+  - **Graphiques SHAP (Waterfall)** : Indispensables pour la "Fiche Compte", ils explicitent l'impact de chaque variable sur le score d'un client spécifique, garantissant ainsi la transparence de la recommandation.
+- **Organisation narrative des 3 vues** : L'interface est pensée comme un entonnoir de décision :
+  1. *Vue Portefeuille* : Vue d'ensemble (macro) pour appréhender les KPIs globaux.
+  2. *Vue Priorisation* : Cartographie des clients à risque pour repérer ceux nécessitant une intervention immédiate.
+  3. *Fiche Compte* : Analyse granulaire (micro) détaillant le score et l'explication SHAP d'un client sélectionné pour préparer l'appel du CSM.
+- **Gestion de l'accessibilité (WCAG)** : Nous avons appliqué une palette de couleurs *daltonisme-friendly* (éviter les nuances subtiles de rouge/vert exclusif) afin de garantir que tous les collaborateurs puissent distinguer les niveaux de risque sans difficulté.
+- **Présentation d'un score à un public non technique** : Les probabilités brutes (ex: 0.81) sont traduites en catégories explicites ("Risque Élevé", "Priorité Absolue"). Le vocabulaire mathématique est masqué au profit de termes d'action et d'indicateurs colorés simples.
+- **Utilisation de l'agent de déploiement** : L'agent de déploiement a été spécifiquement sollicité pour préparer l'environnement d'exécution du dashboard et s'assurer de sa robustesse, validant ainsi l'autonomie du code en dehors de l'interface Gemini CLI.
 
 *Dernière mise à jour : 29 mars 2026*
 
