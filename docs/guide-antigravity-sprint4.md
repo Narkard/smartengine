@@ -104,16 +104,29 @@ git push origin main
 
 ### Étape 4a — Générer le script
 
-**💬 Prompt d'amorce (Quentin → Antigravity) :**
+**🤖 Prompt Antigravity (Quentin) :**
 ```
-Je dois créer un script Python qui génère un fichier de priorisation des clients
-à risque de churn pour le projet smartEngine.
-Les données sources sont outputs/scores.csv et data/processed/analytics.csv.
-Pose-moi les questions nécessaires avant de commencer.
+Génère un script Python src/generate_priorisation.py qui :
+1. Charge outputs/scores.csv (colonnes : account_id, churn_score, risk_level)
+2. Charge data/processed/analytics.csv et en extrait le MRR par account_id
+3. Fusionne les deux tables sur account_id
+4. Calcule la médiane du MRR et crée une colonne value_level :
+   - 'high' si MRR >= médiane
+   - 'low'  si MRR < médiane
+5. Affecte un quadrant selon ces règles :
+   - risk_level='High' ET value_level='high' → 'Q1 - Priorité maximale'
+   - risk_level='High' ET value_level='low'  → 'Q2 - Action automatisée'
+   - risk_level!='High' ET value_level='high' → 'Q3 - Surveillance'
+   - risk_level!='High' ET value_level='low'  → 'Q4 - Aucune action'
+6. Ajoute une colonne action_recommandee selon le quadrant :
+   - Q1 → 'Appel CSM direct sous 24h'
+   - Q2 → 'Email automatisé de relance'
+   - Q3 → 'Fidélisation douce, surveillance'
+   - Q4 → 'Aucune action prioritaire'
+7. Exporte outputs/priorisation.csv avec les colonnes :
+   account_id, churn_score, risk_level, MRR, value_level, quadrant, action_recommandee
+8. Affiche un résumé : médiane MRR utilisée + nombre de comptes par quadrant
 ```
-
-> Antigravity va demander : quelles colonnes sont disponibles ? Comment définir la valeur d'un compte ? Quel seuil utiliser pour séparer valeur haute et basse ? Quelle structure pour le CSV final ?
-> Réponds à ses questions en donnant les détails du projet.
 
 ### Étape 4b — Exécuter et vérifier
 
@@ -122,13 +135,14 @@ Pose-moi les questions nécessaires avant de commencer.
 python src/generate_priorisation.py
 ```
 
-**💬 Prompt d'amorce (Quentin → Antigravity) :**
+**🤖 Prompt Antigravity (Quentin) :**
 ```
 Le script vient de générer outputs/priorisation.csv.
-Peux-tu vérifier que le fichier est correct et me donner un résumé ?
+Vérifie que le fichier est correct :
+- Pas de valeurs manquantes
+- Les 4 quadrants sont présents
+- Affiche les 5 premières lignes et la répartition par quadrant
 ```
-
-> Antigravity va analyser le fichier et signaler s'il y a des problèmes (valeurs manquantes, quadrants absents, mauvaises colonnes).
 
 ### Étape 4c — Push
 
@@ -152,14 +166,13 @@ git push origin main
 
 #### Étape 5a — Installer les dépendances
 
-**💬 Prompt d'amorce (Léo → Antigravity) :**
+**🤖 Prompt Antigravity (Léo) :**
 ```
-Je dois créer un dashboard Streamlit pour le projet smartEngine Sprint 4.
-Avant de commencer à coder, quelles dépendances Python vais-je avoir besoin ?
-Aide-moi à créer ou mettre à jour src/requirements.txt.
-```
+Crée ou mets à jour src/requirements.txt avec les dépendances suivantes :
+streamlit, pandas, plotly, shap, joblib, scikit-learn, matplotlib
 
-> Antigravity va demander : quelles fonctionnalités sont prévues (SHAP, graphiques interactifs...) ? Quelle version de Python ? etc.
+Puis donne-moi la commande pour les installer.
+```
 
 **🔄 Action manuelle (Léo) :**
 ```
@@ -168,17 +181,34 @@ pip install -r src/requirements.txt
 
 #### Étape 5b — Générer le dashboard
 
-**💬 Prompt d'amorce (Léo → Antigravity) :**
+**🤖 Prompt Antigravity (Léo) :**
 ```
-Je dois créer src/dashboard.py : une application Streamlit pour les équipes
-Customer Success de RavenStack. Elle doit exploiter outputs/priorisation.csv
-et outputs/scores.csv.
-Pose-moi les questions nécessaires pour comprendre ce que le dashboard doit faire
-avant de commencer à coder.
-```
+En te basant sur outputs/scores.csv et outputs/priorisation.csv,
+génère src/dashboard.py : une application Streamlit avec 3 vues.
 
-> Antigravity va demander : combien de vues ? Qui sont les utilisateurs (non techniques ?) ? Faut-il des explications SHAP ? Quelles contraintes d'accessibilité ?
-> Réponds précisément : 3 vues (portefeuille, priorisation, fiche compte), utilisateurs non techniques, SHAP pour la fiche compte, accessibilité WCAG / daltonisme.
+Vue 1 — Portefeuille :
+- KPIs : nombre de comptes, taux de churn prédit (%), MRR total à risque
+- Histogramme de distribution des churn_score
+- Camembert de répartition par quadrant
+
+Vue 2 — Priorisation :
+- Scatter plot interactif (X = churn_score, Y = MRR, couleur = quadrant)
+- Tableau filtrable par quadrant, plan, fourchette de score et de MRR
+- Colonnes : account_id, churn_score, risk_level, MRR, quadrant, action_recommandee
+
+Vue 3 — Fiche compte :
+- Dropdown de sélection d'un compte (account_id)
+- Profil complet : plan, ancienneté, usage, tickets
+- Jauge visuelle du score (formulée de façon non technique)
+- Quadrant et action recommandée mis en évidence avec une icône
+- Graphique SHAP : charger outputs/models/churn_model.joblib, calculer les valeurs SHAP, afficher les 5 facteurs principaux
+
+Contraintes :
+- Palette daltonisme-friendly (orange/bleu, pas rouge/vert pur)
+- Libellés texte sur tous les graphiques, pas uniquement la couleur
+- Exécutable avec : streamlit run src/dashboard.py
+- Aucune dépendance à Gemini CLI
+```
 
 #### Étape 5c — Tester le dashboard
 
@@ -194,14 +224,12 @@ Vérifier :
 
 #### Étape 5d — Corriger si erreur
 
-**💬 Prompt d'amorce (Léo → Antigravity) — si bug :**
+**🤖 Prompt Antigravity (Léo) — si bug :**
 ```
-J'ai une erreur au lancement du dashboard. Voici le message :
+Le dashboard src/dashboard.py produit l'erreur suivante au lancement :
 [coller le message d'erreur exact]
-Qu'est-ce qui ne va pas ?
+Identifie la cause et corrige le fichier.
 ```
-
-> Antigravity va analyser l'erreur, poser des questions de contexte si nécessaire, puis proposer une correction.
 
 #### Étape 5e — Push
 
@@ -218,27 +246,29 @@ git push origin main
 
 #### Étape 5f — Générer les recommandations
 
-**💬 Prompt d'amorce (Sophie → Antigravity) :**
+**🤖 Prompt Antigravity (Sophie) :**
 ```
-Je suis Product Owner sur le projet smartEngine Sprint 4.
-Je dois rédiger un document de recommandations stratégiques pour la direction
-de RavenStack, basé sur les résultats du modèle de churn.
-Pose-moi les questions nécessaires avant de commencer à rédiger.
-```
+Génère outputs/recommandations.md : un document stratégique rédigé pour
+la direction de RavenStack (public non technique, sans jargon ML).
+Utilise les vrais chiffres de outputs/scores.csv et outputs/priorisation.csv.
 
-> Antigravity va demander : qui est le public cible ? Quels chiffres utiliser ? Faut-il calculer un ROI ? Doit-on inclure un protocole de mesure ?
-> Réponds : public non technique (direction), utiliser les vrais chiffres de priorisation.csv, inclure ROI estimé et protocole groupe témoin/A/B test.
+Le document doit répondre à 4 questions :
+1. Que dit le modèle ? (Taux de churn global, profil type, top 3 facteurs)
+2. Quelles actions par quadrant ? (Détailler les 4 quadrants)
+3. Quel ROI estimé ? (Calculer le MRR sauvé si on retient 40% des comptes Q1)
+4. Quelle feuille de route ? (Phase pilote 4 semaines, protocole de test A/B)
+```
 
 #### Étape 5g — Relire et ajuster
 
 **🔄 Action manuelle (Sophie) :**
 Relire le document. Si des passages sont trop techniques :
 
-**💬 Prompt d'amorce (Sophie → Antigravity) :**
+**🤖 Prompt Antigravity (Sophie) :**
 ```
 Ce passage du document de recommandations est trop technique pour la direction :
 [coller le passage]
-Reformule-le en langage non technique, sans jargon data science.
+Reformule-le en langage métier, sans jargon data science.
 ```
 
 #### Étape 5h — Push
@@ -260,15 +290,15 @@ git push origin main
 
 ### Quentin — sous-section 4.1
 
-**💬 Prompt d'amorce (Quentin → Antigravity) :**
+**🤖 Prompt Antigravity (Quentin) :**
 ```
-Je dois rédiger la sous-section 4.1 "Segmentation risque / valeur" dans
-docs/dossier-conception.md, pour documenter les choix faits dans ce sprint.
-Pose-moi les questions nécessaires pour rédiger cette section.
+Rédige et ajoute la sous-section "4.1 Segmentation risque / valeur" dans
+docs/dossier-conception.md. Couvre :
+- Définition du MRR et de la CLV
+- Justification du choix de la médiane du MRR comme seuil
+- Pourquoi la matrice risque/valeur plutôt que K-Means
+- Lien avec l'article 22 du RGPD (pourquoi un humain doit rester dans la boucle)
 ```
-
-> Antigravity va demander : pourquoi la médiane ? Pourquoi pas un clustering ? Quel lien avec le RGPD ?
-> Réponds avec tes justifications, il rédige la section.
 
 **🔄 Action manuelle (Quentin) :**
 ```
@@ -281,14 +311,16 @@ git push origin main
 
 ### Léo — sous-section 4.2
 
-**💬 Prompt d'amorce (Léo → Antigravity) :**
+**🤖 Prompt Antigravity (Léo) :**
 ```
-Je dois rédiger la sous-section 4.2 "Dashboard Streamlit" dans
-docs/dossier-conception.md pour documenter les choix de conception.
-Pose-moi les questions nécessaires avant de rédiger.
+Rédige et ajoute la sous-section "4.2 Dashboard Streamlit" dans
+docs/dossier-conception.md. Couvre :
+- Choix des visualisations (scatter plot, SHAP, jauge)
+- Organisation narrative des 3 vues
+- Gestion de l'accessibilité WCAG (palette daltonisme-friendly)
+- Comment présenter un score à un public non technique
+- Comment l'agent de déploiement a été utilisé
 ```
-
-> Antigravity va demander : pourquoi ces visualisations ? Comment as-tu géré l'accessibilité ? Quel retour d'expérience sur Streamlit ?
 
 **🔄 Action manuelle (Léo) :**
 ```
@@ -301,14 +333,14 @@ git push origin main
 
 ### Sophie — sous-section 4.3
 
-**💬 Prompt d'amorce (Sophie → Antigravity) :**
+**🤖 Prompt Antigravity (Sophie) :**
 ```
-Je dois rédiger la sous-section 4.3 "Recommandations et mesure d'impact" dans
-docs/dossier-conception.md.
-Pose-moi les questions nécessaires pour rédiger cette section.
+Rédige et ajoute la sous-section "4.3 Recommandations et mesure d'impact" dans
+docs/dossier-conception.md. Couvre :
+- Méthode de calcul du ROI estimé
+- Protocole de mesure d'impact (groupe témoin, test A/B, uplift)
+- Conduite du changement (freins possibles et solutions)
 ```
-
-> Antigravity va demander : comment as-tu calculé le ROI ? Quel protocole de mesure as-tu défini ? Quels freins au changement as-tu anticipés ?
 
 **🔄 Action manuelle (Sophie) :**
 ```
@@ -321,15 +353,12 @@ git push origin main
 
 ### Maé — sous-sections 4.4 et 4.5
 
-**💬 Prompt d'amorce (Maé → Antigravity) :**
+**🤖 Prompt Antigravity (Maé) :**
 ```
-Je dois rédiger deux sous-sections dans docs/dossier-conception.md :
-- 4.4 : Retour d'expérience sur les agents IA (bilan des 4 sprints)
-- 4.5 : Limites et perspectives du modèle
-Pose-moi les questions nécessaires avant de commencer.
+Rédige et ajoute les sous-sections 4.4 et 4.5 dans docs/dossier-conception.md :
+- 4.4 : Retour d'expérience sur les agents IA (bilan des 4 agents utilisés sur les 4 sprints : points forts, limites, interventions manuelles)
+- 4.5 : Limites et perspectives du modèle (ce que le modèle ne capture pas, améliorations possibles)
 ```
-
-> Antigravity va demander : quels agents ont été créés à chaque sprint ? Qu'est-ce qui a bien marché ? Quelles limites as-tu observées sur le modèle ?
 
 **🔄 Action manuelle (Maé) :**
 ```
@@ -344,14 +373,14 @@ git push origin main
 
 ## ÉTAPE 7 — Joanne : compilation de la Section 4
 
-**💬 Prompt d'amorce (Joanne → Antigravity) :**
+**🤖 Prompt Antigravity (Joanne) :**
 ```
-Toute l'équipe a rédigé sa sous-section dans docs/dossier-conception.md.
-Je dois maintenant compiler et harmoniser la section 4 pour qu'elle soit cohérente.
-Pose-moi les questions nécessaires avant de commencer.
+Compile et harmonise la section 4 complète dans docs/dossier-conception.md.
+Vérifie la cohérence de la mise en forme.
+Ajoute :
+- Une introduction à la section 4
+- Une conclusion générale du projet
 ```
-
-> Antigravity va demander : y a-t-il des incohérences de style à corriger ? Faut-il une introduction et une conclusion à la section 4 ? Le dossier complet couvre-t-il bien les sections 1 à 4 ?
 
 **🔄 Action manuelle (Joanne) :**
 ```
@@ -366,14 +395,17 @@ git push origin main
 
 ## ÉTAPE 8 — Joanne : plan de soutenance
 
-**💬 Prompt d'amorce (Joanne → Antigravity) :**
+**🤖 Prompt Antigravity (Joanne) :**
 ```
-Je dois créer un plan de soutenance pour présenter le projet smartEngine au jury.
-La soutenance dure environ 20 minutes pour 5 personnes.
-Pose-moi les questions nécessaires avant de générer le plan.
+Génère un plan détaillé pour la soutenance (20 minutes) dans docs/soutenance_plan.md.
+Répartition :
+- Introduction et contexte (2 min) — Sophie
+- Données et feature engineering (4 min) — Quentin
+- Modélisation et évaluation (4 min) — Maé
+- Dashboard et démo live (5 min) — Léo
+- ROI et feuille de route (3 min) — Sophie
+- Bilan agents IA (2 min) — Maé
 ```
-
-> Antigravity va demander : combien de temps par personne ? Dans quel ordre présenter les sprints ? Y a-t-il une démo live du dashboard ?
 
 **🔄 Action manuelle (Joanne) :**
 ```
@@ -386,14 +418,13 @@ git push origin main
 
 ## ÉTAPE 9 — Maé : vérification finale de l'autonomie
 
-**💬 Prompt d'amorce (Maé → Antigravity) :**
+**🤖 Prompt Antigravity (Maé) :**
 ```
-Avant la livraison finale du projet smartEngine, je dois vérifier que tous
-les scripts fonctionnent sans Gemini CLI.
-Aide-moi à faire cette vérification. Par quoi commencer ?
+Vérifie que tous les scripts de production (src/generate_priorisation.py, src/dashboard.py)
+fonctionnent de manière totalement autonome sans Gemini CLI.
+Vérifie que src/requirements.txt est complet.
+Liste ce qui doit être corrigé si besoin.
 ```
-
-> Antigravity va demander : quels scripts sont concernés ? Veux-tu tester l'exécution ou seulement analyser les dépendances ? etc.
 
 **🔄 Action manuelle (Maé) :**
 Si des corrections sont nécessaires :
@@ -407,13 +438,11 @@ git push origin main
 
 ## ÉTAPE 10 — Joanne : standup quotidien (chaque matin)
 
-**💬 Prompt d'amorce (Joanne → Antigravity) — chaque matin :**
+**🤖 Prompt Antigravity (Joanne) — chaque matin :**
 ```
-Je dois créer le compte-rendu du standup d'aujourd'hui pour le projet smartEngine.
-Aide-moi à le structurer dans docs/standups/.
+Crée le fichier docs/standups/2026-MM-JJ.md pour le standup du jour.
+Structure : Hier / Aujourd'hui / Blocages pour chaque membre (Léo, Quentin, Maé, Sophie, Joanne).
 ```
-
-> Antigravity va demander la date, les informations de chaque membre, les blocages éventuels.
 
 **🔄 Action manuelle (Joanne) :**
 ```
@@ -448,7 +477,7 @@ git push origin main
 [ ] src/dashboard.py                    → Léo     (ÉTAPE 5)
 [ ] src/requirements.txt                → Léo     (ÉTAPE 5)
 [ ] outputs/recommandations.md          → Sophie  (ÉTAPE 5)
-[ ] .gemini/agents/agent-deploiement.md → Maé     (ÉTAPE 3)
+[ ] .gemini/agents/deployment-manager.md → Maé     (ÉTAPE 3)
 [ ] GEMINI.md mis à jour                → Joanne  (ÉTAPE 3)
 [ ] docs/backlog.md Sprint 4 complet    → Joanne  (ÉTAPE 2)
 [ ] docs/dossier-conception.md S4       → Tous    (ÉTAPES 6 + 7)
