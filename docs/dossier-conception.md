@@ -102,7 +102,10 @@ Nous avons défini trois segments d'action pour l'équipe Customer Success :
 
 **Logique de Rentabilité** : Les seuils ont été calibrés pour maximiser le Recall sur le segment High. Le coût opérationnel d'intervention est concentré là où la probabilité de sauvetage est la plus forte, optimisant ainsi le ROI du service CS.
 
-## 4. Déploiement (Sprint 4)
+## 4. Déploiement et Stratégie (Sprint 4)
+
+Cette dernière section fait le pont entre le travail de modélisation technique du Sprint 3 et l'utilisation opérationnelle de ses résultats. Elle détaille comment les scores prédictifs sont traduits en actions concrètes (matrice de segmentation), mis à disposition des équipes métiers via un outil adapté (dashboard), justifiés économiquement (mesure d'impact et ROI) et analysés sous l'angle des méthodes de travail employées (bilan des agents IA).
+
 ### 4.1 Segmentation risque / valeur
 
 - **Définition du MRR et de la CLV** : Le MRR (*Monthly Recurring Revenue*) représente le revenu mensuel récurrent généré par un abonnement. La CLV (*Customer Lifetime Value*) estime le profit total qu'un client apportera tout au long de sa relation avec RavenStack.
@@ -151,6 +154,12 @@ Bien que le modèle Random Forest remplisse l'objectif initial, il ne reflète e
   1. *Analyse de sentiment (NLP)* : Exploiter le contenu textuel des tickets de support pour ajouter une dimension "humeur" à notre base d'apprentissage.
   2. *Croisement CRM* : Intégrer les données qualitatives issues de Salesforce/HubSpot pour analyser l'engagement relationnel (nombre de réunions refusées, temps de réponse aux emails).
   3. *Modèles segmentés* : Entraîner des modèles distincts par strate de clientèle (ex: modèle Enterprise vs modèle Starter), les comportements de churn étant très différents selon la taille de l'entreprise.
+
+## 5. Conclusion Générale
+
+Le projet smartEngine démontre la capacité à transformer des données de comportement complexes en un véritable outil de pilotage stratégique pour la rétention client chez RavenStack. En passant du traitement de la donnée brute à un modèle prédictif interprétable (Random Forest couplé à SHAP), puis à un outil actionnable pour les équipes Customer Success (matrice de priorisation et Dashboard Streamlit), le cycle de la donnée est bouclé de bout en bout. 
+
+L'approche méthodologique a également permis de valider un concept fort : l'utilisation d'une équipe d'agents IA (via Gemini CLI) comme puissant accélérateur de production technique, prouvant en parallèle que l'expertise métier humaine demeure la clef de voûte pour garantir la sécurité (RGPD), l'éthique (explicabilité) et la pertinence économique du système. Le projet pose des bases saines pour une V2 encore plus fine incluant l'analyse de sentiment (NLP).
 
 *Dernière mise à jour : 26 mai 2026*
 
