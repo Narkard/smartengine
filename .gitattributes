@@ -1,0 +1,24 @@
+# .gitattributes - Gestion des fins de ligne selon la plateforme
+
+# Par defaut : Git gere automatiquement les fins de ligne
+* text=auto
+
+# Scripts Mac/Linux : toujours LF (sinon ils cassent sur Mac apres git clone)
+*.sh text eol=lf
+
+# Scripts Windows : toujours CRLF
+*.bat text eol=crlf
+
+# Fichiers Python et texte : LF universel
+*.py  text eol=lf
+*.md  text eol=lf
+*.txt text eol=lf
+*.csv text eol=lf
+*.json text eol=lf
+
+# Fichiers binaires : pas de conversion
+*.joblib binary
+*.pkl    binary
+*.pdf    binary
+*.png    binary
+*.jpg    binary
